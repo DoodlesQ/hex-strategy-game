@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://cskwpark38v4q"]
+
+[ext_resource type="Script" uid="uid://dp48qjdfcoyjt" path="res://Scripts/Objects/tile_manager.gd" id="1_6uqi0"]
+[ext_resource type="Script" uid="uid://oqd0b8grpmgf" path="res://Scripts/Hex Logic/hex_grid.gd" id="2_ppyta"]
+[ext_resource type="Script" uid="uid://ctfixvqlduccc" path="res://Scripts/Objects/draggable.gd" id="3_6uqi0"]
+
+[sub_resource type="Resource" id="Resource_6uqi0"]
+script = ExtResource("2_ppyta")
+origin = Vector2(813, 431)
+outer_radius = 20.0
+oriented = 1
+metadata/_custom_type_script = "uid://oqd0b8grpmgf"
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Button" type="Button" parent="."]
+offset_left = 1374.0
+offset_top = 819.0
+offset_right = 1559.0
+offset_bottom = 872.0
+theme_override_font_sizes/font_size = 32
+text = "NEXT TURN"
+
+[node name="HexManager" type="Node2D" parent="."]
+position = Vector2(813, 431)
+rotation = -0.22112913
+scale = Vector2(4.0274444, 1.5268395)
+script = ExtResource("1_6uqi0")
+grid = SubResource("Resource_6uqi0")
+_show_grid = true
+metadata/_custom_type_script = "uid://dp48qjdfcoyjt"
+
+[node name="Draggable" type="Node2D" parent="HexManager"]
+position = Vector2(-34.641018, 0)
+script = ExtResource("3_6uqi0")
+cubic = Vector3(-1, 0, 1)
+metadata/_custom_type_script = "uid://ctfixvqlduccc"
+
+[connection signal="pressed" from="Button" to="HexManager" method="next_turn"]

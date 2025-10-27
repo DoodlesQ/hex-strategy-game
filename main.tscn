@@ -1,0 +1,133 @@
+[gd_scene load_steps=6 format=3 uid="uid://clxi41y4i6va2"]
+
+[ext_resource type="Script" uid="uid://dyyapdx6yt3m" path="res://Objects/beat_manager.gd" id="1_h2yge"]
+[ext_resource type="Script" uid="uid://oqd0b8grpmgf" path="res://Scripts/Hex Logic/hex_grid.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://b0gpnolicy1rx" path="res://Objects/token.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://d2rjtdert1f0f" path="res://Scripts/Hex Logic/cell.gd" id="4_1bvp3"]
+
+[sub_resource type="Resource" id="Resource_0xm2m"]
+script = ExtResource("2_0xm2m")
+origin = Vector2(819, 430)
+outer_radius = 30.0
+metadata/_custom_type_script = "uid://oqd0b8grpmgf"
+
+[node name="Main" type="Node2D"]
+
+[node name="Manager" type="Node2D" parent="."]
+position = Vector2(819, 430)
+script = ExtResource("1_h2yge")
+grid = SubResource("Resource_0xm2m")
+metadata/_custom_type_script = "uid://dyyapdx6yt3m"
+
+[node name="Token" type="Node2D" parent="Manager"]
+position = Vector2(-225, -25.980762)
+script = ExtResource("3_h2yge")
+move_length = 2
+faction = 1
+focus_distance = 10
+periphery = 1.0471975511965976
+cubic = Vector3(-5, 2, 3)
+metadata/_custom_type_script = "uid://b0gpnolicy1rx"
+
+[node name="Token2" type="Node2D" parent="Manager"]
+position = Vector2(90, -51.961525)
+script = ExtResource("3_h2yge")
+move_length = 2
+faction = 2
+focus_distance = 10
+periphery = 1.0471975511965976
+cubic = Vector3(2, -2, 0)
+metadata/_custom_type_script = "uid://b0gpnolicy1rx"
+
+[node name="Cell" type="Node2D" parent="Manager"]
+position = Vector2(-90, -155.88457)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-2, -2, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell2" type="Node2D" parent="Manager"]
+position = Vector2(-90, 103.92305)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-2, 3, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell3" type="Node2D" parent="Manager"]
+position = Vector2(-135, 129.90381)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-3, 4, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell4" type="Node2D" parent="Manager"]
+position = Vector2(-90, 155.88457)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-2, 4, -2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell5" type="Node2D" parent="Manager"]
+position = Vector2(-135, -181.86534)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-3, -2, 5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell6" type="Node2D" parent="Manager"]
+position = Vector2(-180, -207.8461)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-4, -2, 6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell7" type="Node2D" parent="Manager"]
+position = Vector2(-225, -233.82686)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-5, -2, 7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell8" type="Node2D" parent="Manager"]
+position = Vector2(90, 103.92305)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(2, 1, -3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell9" type="Node2D" parent="Manager"]
+position = Vector2(-270, 311.76913)
+script = ExtResource("4_1bvp3")
+visibility = 1
+cubic = Vector3(-6, 9, -3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell10" type="Node2D" parent="Manager"]
+position = Vector2(45, -233.82686)
+script = ExtResource("4_1bvp3")
+visibility = 1
+cubic = Vector3(1, -5, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell11" type="Node2D" parent="Manager"]
+position = Vector2(-450, 51.961525)
+script = ExtResource("4_1bvp3")
+cubic = Vector3(-10, 6, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell12" type="Node2D" parent="Manager"]
+position = Vector2(-360, -103.92305)
+script = ExtResource("4_1bvp3")
+visibility = 1
+cubic = Vector3(-8, 2, 6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell13" type="Node2D" parent="Manager"]
+position = Vector2(-450, -155.88457)
+script = ExtResource("4_1bvp3")
+visibility = 1
+cubic = Vector3(-10, 2, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Button" type="Button" parent="."]
+offset_left = 1396.0
+offset_top = 819.0
+offset_right = 1581.0
+offset_bottom = 872.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 32
+text = "CONFIRM TURN"
+
+[connection signal="pressed" from="Button" to="Manager" method="confirm_turn"]

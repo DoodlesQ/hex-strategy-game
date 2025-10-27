@@ -1,0 +1,9 @@
+- HAIL TO THE KINGFISH - Huey Long America
+	- Football terms?
+	- Team Numbers painted on the backs of Tanks
+- Rasputin The Wizard King of Russia
+	- Power armor guards?
+- The Byzantines (Ottoman/Roman)
+	- Shield Tank
+- Britain In The Middle Of the Ocean
+	- "Hated the mainland so much they voted to leave and took their country with them"
