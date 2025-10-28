@@ -17,8 +17,10 @@ static func of_type(_type : Type) -> RefCounted:
 		Type.WATCH: return Command.Watch
 	return Command.Undefined
 
-@abstract func execute(beat : int, token : Token, callback : Callable) -> void
+static func is_overwritable(_type : Type) -> bool:
+	return _type in [Type.UNDEFINED, Type.WATCH, Type.AIM, Type.AIM_TARGET]
 
+@abstract func execute(beat : int, token : Token, callback : Callable) -> void
 
 class Aim:
 	extends Command

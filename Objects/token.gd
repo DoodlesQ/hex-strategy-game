@@ -134,6 +134,9 @@ func tween_to_move(beat : int, callback : Callable) -> void:
 			face_towards = Cubic.get_angle(next_command.target - move)
 		_:
 			face_towards = position.angle_to_point(final_position) - Cell.PI_6
+	if alert:
+		if Command.is_overwritable(next_command.type):
+			face_towards = Cubic.get_angle(target_tile - move)
 	tween.tween_interval(randf() * 0.5)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
@@ -291,10 +294,9 @@ func generate_vision(beat : int) -> void:
 	partial_visible_tiles = []
 	periphery_tiles = []
 	enemy_tiles = []
-	if not focused:
-		for trie : Array[Vector3] in _tries_radial:
-			_line_of_sight(center, trie, false)
-	else:
+	for trie : Array[Vector3] in _tries_radial:
+		_line_of_sight(center, trie, false)
+	if focused:
 		for trie : Array[Vector3] in _focus_cone:
 			_line_of_sight(center, trie, true)
 		for trie : Array[Vector3] in _periphery_cone:
@@ -443,8 +445,8 @@ func perform_command_to_beat(beat : int) -> void:
 			_:
 				command = Command.Watch.new()
 	print(command.type)
-	#if alert:
-		#command = Command.Aim.new(facing)
+	if alert and Command.is_overwritable(command.type):
+		command = Command.Aim_Target.new(target_tile)
 	command.execute(beat, self, func():
 		debug_draw_vision = true
 		queue_redraw()
@@ -462,6 +464,7 @@ func reset() -> void:
 		BLANK_BEAT.duplicate(), BLANK_BEAT.duplicate()
 	]
 	alert = false
+	target_tile = Vector3.INF
 	last_move_set = -1
 	last_facing = facing
 	queue_redraw()
