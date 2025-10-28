@@ -654,9 +654,16 @@ static func draw_vision_cone(
 		canvas.draw_line(origin, v, color, 2)
 		canvas.draw_line(origin, w, color, 2)
 		canvas.draw_arc(origin, radius, a1, Command.Aim.get_rotate_to(a1, a2), 100, color, 2)
-		color = Color(1,1,1,alpha * 0.5)
 		
-		
+static func draw_periphery(
+		canvas : CanvasItem,
+		token : Token,
+		origin : Vector2 = Vector2.ZERO,
+		alpha : float = 0.5
+	) -> void:
+		var radius : float = token.radial_distance * token.manager.grid.inner_radius * HexGrid.SQRT_3
+		var color : Color = Color(1,1,1,alpha)
+		canvas.draw_circle(origin, radius, color, false, 2)
 
 ## Draw [param token]'s projected path, as defined by the movements listed in
 ## [member beats]. Path drawn will start from [param origin].

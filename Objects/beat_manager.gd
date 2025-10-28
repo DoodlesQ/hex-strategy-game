@@ -179,13 +179,12 @@ func confirm_command() -> void:
 			c = Command.Aim.new(selected.facing)
 		Command.Type.AIM_TARGET:
 			c = Command.Aim_Target.new(selected.target_tile)
-		Command.Type.AIM, Command.Type.AIM_TARGET:
-			selected.facing = selected.last_facing
-			selected.target_tile = Vector3.INF
 		Command.Type.WATCH:
 			c = Command.Watch.new()
 		_:
 			c = Command.Undefined.new()
+	selected.facing = selected.last_facing
+	selected.target_tile = Vector3.INF
 	selected.beats[beat_editing].command = c
 	#print("COMMANDSET: ", selected.beats[beat_editing].command.direction)
 	set_selected(Vector3.INF)
@@ -216,15 +215,18 @@ func _draw() -> void:
 						draw_circle(Cubic.to_real(b, grid), 50 * a, Color(1,1,1,a))
 						var com : Command = token.backsolve_command(i)
 						var draw_cone : bool = false
-						var dir : float = 0.0
-						if com.type == Command.Type.AIM:
-							draw_cone = true
-							dir = com.direction
-						if com.type == Command.Type.AIM_TARGET:
-							draw_cone = true
-							dir = Cubic.get_angle(com.target - b)
+						var dir : float = INF
+						match com.type:
+							Command.Type.AIM:
+								draw_cone = true
+								dir = com.direction
+							Command.Type.AIM_TARGET:
+								draw_cone = true
+								dir = Cubic.get_angle(com.target - b)
 						if draw_cone:
 							Token.draw_vision_cone(self, token, dir, Cubic.to_real(b, grid), 0.25)
+						elif com.type == Command.Type.WATCH:
+							Token.draw_periphery(self, token, Cubic.to_real(b, grid), 0.25)
 						
 
 		var c : float = 1.0 if tool == Tool.COMMAND else 0.0
