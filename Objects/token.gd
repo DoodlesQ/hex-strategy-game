@@ -611,6 +611,14 @@ func _draw() -> void:
 			draw_circle(Vector2.ZERO, manager.grid.inner_radius, Color(0,1,1,0.3))
 		Faction.TWO:
 			draw_circle(Vector2.ZERO, manager.grid.inner_radius, Color(1,0,1,0.3))
+	
+	var hp_circle : Array[Vector2] = [Vector2.ZERO]
+	var t : float = 0
+	while t <= TAU * health / max_health:
+		t += 0.1
+		hp_circle.append(Vector2.from_angle(t - Cell.PI_6 - (PI / 2)) * manager.grid.inner_radius * 0.5)
+	draw_colored_polygon(hp_circle, Color(1,0,0,0.5))
+	
 	super._draw()
 
 func draw_vision(center : Vector2 = Vector2.ZERO) -> void:
