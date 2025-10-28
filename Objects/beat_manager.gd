@@ -23,6 +23,8 @@ var tool : Tool = Tool.COMMAND
 var do_command : bool = false
 var command : Command.Type
 
+var control_faction : Token.Faction = Token.Faction.ONE
+
 func _ready() -> void:
 	for cell in get_cells():
 		if cell as Token: tokens.append(cell)
@@ -31,8 +33,8 @@ func set_selected(location : Vector3) -> void:
 	if selected:
 		selected.selected = false
 		selected.action = Token.Action.NONE
-	var token : Cell = get_cell_at(location)
-	if token as Token:
+	var token : Token = get_cell_at(location)
+	if token and token.faction == control_faction:
 		selected = token
 		token.selected = true
 		if tool == Tool.MOVE:
@@ -69,6 +71,7 @@ func _input(event : InputEvent) -> void:
 					confirm_command()
 				else:
 					for token : Token in tokens:
+						if token.faction != control_faction: continue
 						var at : Vector3 = token.backsolve(beat_editing)
 						if not selected and mouse.is_equal_approx(at):
 							# Do command
@@ -199,14 +202,16 @@ func _draw() -> void:
 						Color(1.0, 1.0, 1.0, 0.5)
 					)
 			for token : Token in tokens:
-				Token.draw_path(self, token, token.position, 0.25)
+				if token.faction == control_faction:
+					Token.draw_path(self, token, token.position, 0.25)
 		
 		if tool == Tool.COMMAND:
 			for token : Token in tokens:
-				for i : int in range(4):
-					var b : Vector3 = token.backsolve(i)
-					var a : float = 0.2 if i != beat_editing else 0.5
-					draw_circle(Cubic.to_real(b, grid), 50 * a, Color(1,1,1,a))
+				if token.faction == control_faction:
+					for i : int in range(4):
+						var b : Vector3 = token.backsolve(i)
+						var a : float = 0.2 if i != beat_editing else 0.5
+						draw_circle(Cubic.to_real(b, grid), 50 * a, Color(1,1,1,a))
 
 		var c : float = 1.0 if tool == Tool.COMMAND else 0.0
 		var d : float = 1.0 if do_command else 0.0

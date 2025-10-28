@@ -480,7 +480,7 @@ func scan_for_enemy() -> Array:
 			var e_distance : float = Cubic.distance(e, Vector3.ZERO)
 			if e_distance <= closest:
 				closest = e_distance
-				targets.append(e + cubic)
+				targets.append(e)
 		var target : Vector3 = targets[0]
 		if len(targets) > 1: target = targets.pick_random()
 		var target_visibility : int = 0
@@ -496,11 +496,11 @@ func scan_for_enemy() -> Array:
 func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void:
 	var moment_accuracy : float = accuracy
 	if target_visibility == 0:
-		var aim_to : float = Cubic.get_angle(target - cubic)
+		var aim_to : float = Cubic.get_angle(target)
 		aim_to = wrapf(snappedf(aim_to, Cell.PI_6 / 2), -PI, PI)
 		tween_to_aim(aim_to, func(): generate_vision(beat), 0.6)
 		alert = true
-		target_tile = target
+		target_tile = target + cubic
 		moment_accuracy *= periphery_penalty
 	if target_visibility == 1: moment_accuracy *= partial_penalty
 	var enemy : Token = enemy_tiles[target]
