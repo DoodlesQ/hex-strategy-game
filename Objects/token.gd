@@ -10,7 +10,7 @@ class_name Token
 @export_range(1, 4, 1, "or_greater", "suffix:tiles") var move_length : int = 1
 
 ## The default "do nothing" beat values.
-var BLANK_BEAT : Dictionary = { "move": Vector3.INF, "command": Command.None.new()}
+var BLANK_BEAT : Dictionary = { "move": Vector3.INF, "command": Command.Undefined.new()}
 
 ## A list of the movement and commands this token will follow in a turn.
 var beats : Array[Dictionary] = [
@@ -55,21 +55,21 @@ func check_move_valid(
 		if other and not other is Token: return false
 		for test : Token in manager.tokens:
 			if test == self: continue
-			var test_is_at : Vector3 = backsolve(test, beat)
+			var test_is_at : Vector3 = test.backsolve(beat)
 			if test_is_at.is_equal_approx(space): return false
 	return true
 
 ## Returns this token's position during a beat.
 ## If this token has no defined position for that beat, checks each previous
 ## beat and returns the first defined position found.
-static func backsolve(token : Token, beat : int) -> Vector3:
+func backsolve(beat : int) -> Vector3:
 		var token_position : Vector3 = Vector3.INF
 		var solve_beat : int = beat
 		while Cubic.is_null(token_position):
 			if solve_beat == -1:
-				token_position = token.cubic
+				token_position = cubic
 				break
-			token_position = token.beats[solve_beat].move
+			token_position = beats[solve_beat].move
 			solve_beat -= 1
 		return token_position
 
@@ -77,10 +77,10 @@ static func backsolve(token : Token, beat : int) -> Vector3:
 ## currently defined movement.
 func validate() -> bool:
 	for beat : int in range(4):
-		var current : Vector3 = backsolve(self, beat)
+		var current : Vector3 = backsolve(beat)
 		for token : Token in manager.tokens:
 			if token == self: continue
-			var other : Vector3 = backsolve(token, beat)
+			var other : Vector3 = token.backsolve(beat)
 			if other.is_equal_approx(current):
 				valid = false
 				return false
@@ -116,18 +116,24 @@ func pop_move() -> Vector3:
 
 ## Animate this token's movement to new position [param move].
 ## [br][param callback]: Function to run after this token has finished moving.
-func tween_to_move(move : Vector3, callback : Callable) -> void:
+func tween_to_move(beat : int, callback : Callable) -> void:
+	var move : Vector3 = backsolve(beat)
 	var tween : Tween = self.create_tween()
 	var final_position : Vector2 = Cubic.to_real(move, manager.grid)
 	#var move_vector : Vector2 = final_position - position
 	#var length : float = 0.2 + Cubic.distance(cubic, move) * 0.4
 	#facing = position.angle_to_point(final_position)
-	var do_look : bool = false
-	var face_towards : float
-	if not final_position.is_equal_approx(position):
-		do_look = true
-		look_smooth = true
-		face_towards = wrapf(position.angle_to_point(final_position) - Cell.PI_6, -PI, PI)
+	var face_towards : float = facing
+	var next_command : Command = backsolve_command(beat)
+	look_smooth = true
+	print(next_command.type)
+	match next_command.type:
+		Command.Type.AIM:
+			face_towards = next_command.direction
+		Command.Type.AIM_TARGET:
+			face_towards = Cubic.get_angle(next_command.target - move)
+		_:
+			face_towards = position.angle_to_point(final_position) - Cell.PI_6
 	tween.tween_interval(randf() * 0.5)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
@@ -135,10 +141,9 @@ func tween_to_move(move : Vector3, callback : Callable) -> void:
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
 	tween.parallel().tween_property(self, "position", final_position, 1.2)
-	if do_look:
-		tween.set_trans(Tween.TRANS_LINEAR)
-		tween.parallel().tween_property(self, "facing", Command.Aim.get_rotate_to(facing, face_towards), 0.5)
-		tween.tween_property(self, "facing", face_towards, 0)
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.parallel().tween_property(self, "facing", Command.Aim.get_rotate_to(facing, face_towards), 1.2)
+	tween.tween_property(self, "facing", face_towards, 0)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_BOUNCE)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.6)
@@ -193,9 +198,6 @@ var enemy_tiles : Array[Vector3] = []
 ## Whether this token is currently focused.
 var focused : bool = true
 
-## Whether this token is alerted.
-var alert : bool = false
-
 ## If false, then any values set to [member facing] are first snapped to one
 ## of 24 directions.
 var look_smooth : bool = false
@@ -212,6 +214,9 @@ var facing : float = -Cell.PI_6:
 
 ## The angle this token was facing at the end of the last turn.
 var last_facing : float = -Cell.PI_6
+
+## The tile being targeted by this token.
+var target_tile : Vector3 = Vector3.INF
 
 ## Returns [code]true[/code] if [param value] is less than or equal to zero.
 func is_zero_or_less_approx(value : float) -> bool:
@@ -281,7 +286,7 @@ func _calculate_view_cone(tries : Array[Array], view_angle : float) -> Array[Arr
 ## and uses [member focus_distance] limited by [member focus angle] and
 ## [member periphery] if [member focused] is [code]true[/code].
 func generate_vision(beat : int) -> void:
-	var center : Vector3 = backsolve(self, beat)
+	var center : Vector3 = backsolve(beat)
 	visible_tiles = []
 	partial_visible_tiles = []
 	periphery_tiles = []
@@ -375,13 +380,12 @@ func scan_for_enemy() -> Array:
 func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void:
 	var notice : float = 1.0
 	if target_visibility == 0:
-		print("TARGET IN PERIPHERY; AIMING")
 		var aim_to : float = Cubic.get_angle(target - cubic)
 		aim_to = wrapf(snappedf(aim_to, Cell.PI_6 / 2), -PI, PI)
-		await tween_to_aim(aim_to, func(): generate_vision(beat), 0.5).finished
+		tween_to_aim(aim_to, func(): generate_vision(beat), 0.5)
 		alert = true
+		target_tile = target
 		notice = randf() - 0.25
-		print("AIM COMPLETE")
 	if target_visibility == 1: notice = randf()
 	if notice > 0.5:
 		print("SHOT FIRED")
@@ -391,9 +395,23 @@ func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void
 # ______ BEAT EXECUTION ______
 
 var command_options : Array[Command.Type] = [
-	Command.Type.NONE,
+	Command.Type.WATCH,
 	Command.Type.AIM,
+	Command.Type.AIM_TARGET,
 ]
+
+## Whether this token is alerted.
+var alert : bool = false
+
+func backsolve_command(beat : int) -> Command:
+	var c : Command = beats[beat].command
+	while c.type == Command.Type.UNDEFINED:
+		if beat == 0:
+			c = Command.Watch.new()
+			break
+		c = beats[beat - 1].command
+		beat -= 1
+	return c
 
 ## Perform the move defined in [member beats] for the given [param beat].
 ## Waits for the signal [signal BeatManager.perform_beat] from its
@@ -401,17 +419,9 @@ var command_options : Array[Command.Type] = [
 func perform_move_to_beat(beat : int) -> void:
 	await manager.perform_beat
 	
-	var move : Vector3 = beats[beat].move
-	if Cubic.is_null(move):
-		var last_beat : int = beat - 1
-		while Cubic.is_null(move):
-			if last_beat == -1: break
-			move = beats[last_beat].move
-			last_beat -= 1
-		if last_beat == -1: move = cubic
-	print("MOVE ", beat, " : ", move)
+	print("MOVE ", beat)
 	
-	tween_to_move(move, func():
+	tween_to_move(beat, func():
 		manager.confirm_beat_complete()
 	)
 
@@ -425,14 +435,22 @@ func perform_command_to_beat(beat : int) -> void:
 	print("COMMAND ", beat, " : FACTION ", faction)
 	
 	var command : Command = beats[beat].command
-	if alert:
-		command = Command.Aim.new(facing)
+	if command.type == Command.Type.UNDEFINED:
+		command = backsolve_command(beat)
+		match command.type:
+			Command.Type.AIM, Command.Type.AIM_TARGET, Command.Type.WATCH:
+				pass
+			_:
+				command = Command.Watch.new()
+	print(command.type)
+	#if alert:
+		#command = Command.Aim.new(facing)
 	command.execute(beat, self, func():
 		debug_draw_vision = true
 		queue_redraw()
 		await get_tree().create_timer(1.0).timeout
 		debug_draw_vision = false
-		manager.confirm_beat_complete()
+		manager.confirm_beat_complete(cubic)
 	)
 	
 	if beat == 3: reset()

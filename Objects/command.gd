@@ -1,30 +1,37 @@
 @abstract
 class_name Command
 
-enum Type{
-	NONE,
-	AIM,
-}
-
 var type : Type
 
-@abstract func execute(beat : int, token : Token, callback : Callable) -> void
+enum Type{
+	UNDEFINED,
+	WATCH,
+	AIM,
+	AIM_TARGET
+}
 
 static func of_type(_type : Type) -> RefCounted:
 	match _type:
 		Type.AIM: return Command.Aim
-	return Command.None
+		Type.AIM_TARGET: return Command.Aim_Target
+		Type.WATCH: return Command.Watch
+	return Command.Undefined
+
+@abstract func execute(beat : int, token : Token, callback : Callable) -> void
+
 
 class Aim:
 	extends Command
 	
 	const TWO_PI : float = 2 * PI
 	
-	var direction : float
+	var target : Vector3 = Vector3.INF
+	
+	var direction : float = INF
 	
 	func _init(angle : float) -> void:
 		type = Type.AIM
-		direction = wrapf(angle, -PI, PI)
+		direction = angle
 	
 	static func get_rotate_to(from : float, to : float) -> float:
 		from = wrap(from, -PI, PI)
@@ -37,24 +44,40 @@ class Aim:
 	
 	func execute(beat : int, token : Token, callback : Callable) -> void:
 		token.tween_to_aim(direction, func():
+			token.target_tile = target
 			token.generate_vision(beat)
 			var target_data : Array = token.scan_for_enemy()
-			await token.get_tree().create_timer(0.5).timeout
 			if len(target_data) > 0:
 				token.act_on_enemy(beat, target_data[0], target_data[1])
-			await token.get_tree().create_timer(0.5).timeout
 			callback.call()
 		, 1.0)
+
+class Aim_Target:
+	extends Aim
 	
-class None:
+	func _init(_target : Vector3) -> void:
+		type = Type.AIM_TARGET
+		target = _target
+	
+	func execute(beat : int, token : Token, callback : Callable) -> void:
+		var token_at : Vector3 = token.backsolve(beat)
+		direction = Cubic.get_angle(target - token_at)
+		super.execute(beat, token, callback)
+	
+class Watch:
 	extends Command
-	func _init() -> void: type = Type.NONE
+	func _init() -> void: type = Type.WATCH
 	func execute(beat : int, token : Token, callback : Callable) -> void:
 		token.focused = false
-		
+		token.target_tile = Vector3.INF
 		token.generate_vision(beat)
 		var target_data : Array = token.scan_for_enemy()
-		await token.get_tree().create_timer(0.5).timeout
 		if len(target_data) > 0:
 			token.act_on_enemy(beat, target_data[0], target_data[1])
+		callback.call()
+
+class Undefined:
+	extends Command
+	func _init() -> void: type = Type.UNDEFINED
+	func execute(_beat : int, _token : Token, callback : Callable) -> void:
 		callback.call()

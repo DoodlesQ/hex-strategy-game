@@ -69,8 +69,8 @@ func _input(event : InputEvent) -> void:
 					confirm_command()
 				else:
 					for token : Token in tokens:
-						var at : Vector3 = Token.backsolve(token, beat_editing)
-						if mouse.is_equal_approx(at):
+						var at : Vector3 = token.backsolve(beat_editing)
+						if not selected and mouse.is_equal_approx(at):
 							# Do command
 							print("COMMANDING ", token)
 							# Do aim
@@ -90,7 +90,7 @@ func _input(event : InputEvent) -> void:
 										b.queue_free()
 								)
 								add_child(buttons[-1])
-								i *= -1
+								i += 40
 			
 		if event.is_action("move_undo"):
 			if tool == Tool.MOVE:
@@ -127,16 +127,17 @@ func confirm_turn() -> void:
 		beat_perform = 0
 		for token : Token in tokens:
 			token.action = Token.Action.NONE
+			token.facing = token.last_facing
 		perform_beat_step()
 
-func confirm_beat_complete() -> void:
-	print("CONFIRMATION")
+func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
+	print("CONFIRMATION ", (str(id) if id.is_finite() else ""))
 	beat_confirmed += 1
 	print(beat_confirmed, " vs ", beat_confirm_sum)
 	if beat_confirmed == beat_confirm_sum:
 		if beat_step == 0:
 			for token : Token in tokens:
-				token.cubic = Token.backsolve(token, beat_perform)
+				token.cubic = token.backsolve(beat_perform)
 			beat_step += 1
 		elif beat_step == 1:
 			beat_step = 0
@@ -171,9 +172,15 @@ func confirm_command() -> void:
 	match command:
 		Command.Type.AIM:
 			c = Command.Aim.new(selected.facing)
+		Command.Type.AIM_TARGET:
+			c = Command.Aim_Target.new(selected.target_tile)
+		Command.Type.AIM, Command.Type.AIM_TARGET:
 			selected.facing = selected.last_facing
+			selected.target_tile = Vector3.INF
+		Command.Type.WATCH:
+			c = Command.Watch.new()
 		_:
-			c = Command.None.new()
+			c = Command.Undefined.new()
 	selected.beats[beat_editing].command = c
 	#print("COMMANDSET: ", selected.beats[beat_editing].command.direction)
 	set_selected(Vector3.INF)
@@ -197,7 +204,7 @@ func _draw() -> void:
 		if tool == Tool.COMMAND:
 			for token : Token in tokens:
 				for i : int in range(4):
-					var b : Vector3 = Token.backsolve(token, i)
+					var b : Vector3 = token.backsolve(i)
 					var a : float = 0.2 if i != beat_editing else 0.5
 					draw_circle(Cubic.to_real(b, grid), 50 * a, Color(1,1,1,a))
 
@@ -209,12 +216,10 @@ func _process(_delta : float) -> void:
 	if tool == Tool.COMMAND and selected:
 		if do_command:
 			match command:
-				Command.Type.AIM:
-					var aim_from : Vector2 = Cubic.to_real(
-						Token.backsolve(selected, beat_editing), grid
-					)
-					selected.facing = \
-						aim_from.angle_to_point(get_local_mouse_position()) - Cell.PI_6
+				Command.Type.AIM, Command.Type.AIM_TARGET:
+					var aim_from : Vector3 = selected.backsolve(beat_editing)
+					selected.target_tile = Cubic.snapped(get_mouse_cubic())
+					selected.facing = Cubic.get_angle(selected.target_tile - aim_from)
 					selected.calculate_view_cones()
 					selected.generate_vision(beat_editing)
 					selected.queue_redraw()

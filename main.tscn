@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://clxi41y4i6va2"]
+[gd_scene load_steps=6 format=3 uid="uid://v3247yss0wq4"]
 
 [ext_resource type="Script" uid="uid://dyyapdx6yt3m" path="res://Objects/beat_manager.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://oqd0b8grpmgf" path="res://Scripts/Hex Logic/hex_grid.gd" id="2_0xm2m"]
