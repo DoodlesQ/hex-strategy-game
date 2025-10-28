@@ -3,12 +3,6 @@
 extends Cell
 class_name Token
 
-## The number of movement this token can perform in a turn.
-@export_range(1, 4) var move_limit : int = 4
-
-## The number of tiles this token can travel per movement.
-@export_range(1, 4, 1, "or_greater", "suffix:tiles") var move_length : int = 1
-
 ## The default "do nothing" beat values.
 var BLANK_BEAT : Dictionary = { "move": Vector3.INF, "command": Command.Undefined.new()}
 
@@ -26,6 +20,14 @@ enum Faction{ NONE, ONE, TWO }
 
 
 # _____ MOVEMENT _____
+
+@export_group("Movement")
+
+## The number of movement this token can perform in a turn.
+@export_range(1, 4) var move_limit : int = 4
+
+## The number of tiles this token can travel per movement.
+@export_range(1, 4, 1, "or_greater", "suffix:tiles") var move_length : int = 1
 
 ## The last beat that had a movement set for it.
 var last_move_set : int = -1
@@ -164,6 +166,8 @@ func get_move_list() -> Array[Vector3]:
 
 # ______ AIMING & VISION ______
 
+@export_group("Vision")
+
 ## The short-range view distance of this token.
 ## Used in most cases.
 @export_range(1, 25, 1, "or_greater", "suffix:tiles") var radial_distance : int = 4
@@ -196,7 +200,7 @@ var partial_visible_tiles : Array[Vector3] = []
 var periphery_tiles : Array[Vector3] = []
 
 ## The tiles at which this token has detected enemies.
-var enemy_tiles : Array[Vector3] = []
+var enemy_tiles : Dictionary = {}
 
 ## Whether this token is currently focused.
 var focused : bool = true
@@ -293,7 +297,7 @@ func generate_vision(beat : int) -> void:
 	visible_tiles = []
 	partial_visible_tiles = []
 	periphery_tiles = []
-	enemy_tiles = []
+	enemy_tiles = {}
 	for trie : Array[Vector3] in _tries_radial:
 		_line_of_sight(center, trie, false)
 	if focused:
@@ -311,7 +315,7 @@ func _line_of_sight(center : Vector3, trie : Array[Vector3], focus : bool) -> vo
 		elif partial and point in partial_visible_tiles: skip = true
 		elif not focus and point in periphery_tiles: skip = true
 		if skip:
-			if point in enemy_tiles: break
+			if point in enemy_tiles.keys(): break
 			continue
 		if point in periphery_tiles: periphery_tiles.erase(point)
 		if not partial and point in partial_visible_tiles:
@@ -320,9 +324,9 @@ func _line_of_sight(center : Vector3, trie : Array[Vector3], focus : bool) -> vo
 		if other:
 			if other is Token:
 				if (other.faction == 0 or other.faction != faction):
-					if point in enemy_tiles: break
+					if point in enemy_tiles.keys(): break
 					else:
-						enemy_tiles.append(point)
+						enemy_tiles[point] = other
 				if partial:
 					if not focus: periphery_tiles.append(point)
 					else: partial_visible_tiles.append(point)
@@ -373,6 +377,23 @@ var command_options : Array[Command.Type] = [
 
 ## Whether this token is alerted.
 var alert : bool = false
+
+@export_group("Statistics")
+
+## The amount of "hits" this token can withstand.
+@export var max_health : float = 3.0
+
+## This token's current health.
+var health : float
+
+## The chance for any attack on this token to miss, dealing reduced damage.
+@export_range(0.0, 1.0, 0.01, "suffix:/1.0") var evasion : float = 0.2
+
+## The amount of "hits" this token inflicts when attacking.
+@export var damage : float = 1.0
+
+## The chance for any attack this token makes to miss, dealing reduced damage.
+@export_range(0.0, 1.0, 0.01, "suffix:/1.0")  var accuracy : float = 0.8
 
 func backsolve_command(beat : int) -> Command:
 	var c : Command = beats[beat].command
@@ -436,7 +457,7 @@ func scan_for_enemy() -> Array:
 	if len(enemy_tiles) > 0:
 		var closest : float = INF
 		var targets : Array[Vector3] = []
-		for e : Vector3 in enemy_tiles:
+		for e : Vector3 in enemy_tiles.keys():
 			var e_distance : float = Cubic.distance(e, Vector3.ZERO)
 			if e_distance <= closest:
 				closest = e_distance
@@ -454,20 +475,25 @@ func scan_for_enemy() -> Array:
 ## Token becomes [param alert] if the target is within peripheral and turns to
 ## face it, otherwise it attempts to fire upon the target.
 func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void:
-	var notice : float = 1.0
+	var moment_accuracy : float = accuracy
 	if target_visibility == 0:
 		var aim_to : float = Cubic.get_angle(target - cubic)
 		aim_to = wrapf(snappedf(aim_to, Cell.PI_6 / 2), -PI, PI)
 		tween_to_aim(aim_to, func(): generate_vision(beat), 0.5)
 		alert = true
 		target_tile = target
-		notice = randf() - 0.25
-	if target_visibility == 1: notice = randf()
-	if notice > 0.5:
-		print("SHOT FIRED")
+		moment_accuracy *= 0.5
+	if target_visibility == 1: moment_accuracy *= 0.5
+	var enemy : Token = enemy_tiles[target]
+	var shot : float = randf()
+	if shot <= moment_accuracy and shot >= enemy.evasion:
+		enemy.deal_damage(damage)
 	else:
-		print("SHOT MISSED")
-		
+		enemy.deal_damage(damage * 0.5)
+
+func deal_damage(hits : float) -> void:
+	health = max(0.0, health - hits)
+
 ## Reset this token's beats to the values defined in [member BLANK_BEAT].
 func reset() -> void:
 	beats = [
@@ -487,6 +513,7 @@ func _ready() -> void:
 	super._ready()
 	_tries_radial = _pregenerate_tries(radial_distance)
 	_tries_focus = _pregenerate_tries(focus_distance)
+	health = max_health
 	#last_facing = 0.0
 
 func _draw() -> void:
@@ -554,7 +581,7 @@ func draw_vision(center : Vector2 = Vector2.ZERO) -> void:
 		#draw_circle(, 20, Color(1,1,1,0.2))
 		draw_colored_polygon(hex, Color(1,1,1,0.1))
 		
-	for v in enemy_tiles:
+	for v in enemy_tiles.keys():
 		var hex : Array[Vector2] = Cell.get_points_around(Cubic.to_real(v, manager.grid), manager.grid.outer_radius, manager.grid.oriented)
 		#draw_circle(, 20, Color(1,1,1,0.2))
 		draw_colored_polygon(hex, Color(1,0,0,0.0))

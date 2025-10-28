@@ -22,20 +22,22 @@ metadata/_custom_type_script = "uid://dyyapdx6yt3m"
 [node name="Token" type="Node2D" parent="Manager"]
 position = Vector2(-225, -25.980762)
 script = ExtResource("3_h2yge")
-move_length = 2
 faction = 1
+move_length = 2
 focus_distance = 10
 periphery = 1.0471975511965976
+health = 3.0
 cubic = Vector3(-5, 2, 3)
 metadata/_custom_type_script = "uid://b0gpnolicy1rx"
 
 [node name="Token2" type="Node2D" parent="Manager"]
 position = Vector2(90, -51.961525)
 script = ExtResource("3_h2yge")
-move_length = 2
 faction = 2
+move_length = 2
 focus_distance = 10
 periphery = 1.0471975511965976
+health = 3.0
 cubic = Vector3(2, -2, 0)
 metadata/_custom_type_script = "uid://b0gpnolicy1rx"
 
