@@ -387,12 +387,19 @@ var alert : bool = false
 var health : float
 
 ## The chance for any attack on this token to miss, dealing reduced damage.
-@export_range(0.0, 1.0, 0.01, "suffix:/1.0") var evasion : float = 0.2
+## Negative values indicate that this token is easier to hit than average.
+## [br][code]1.0[/code] means this token is a guaranteed miss.
+## [br][code]-1.0[/code] means this token is a guaranteed hit, not accounting for
+## attack accuracy.
+@export_range(-1.0, 1.0, 0.01, "suffix:/1.0") var evasion : float = 0.2
 
 ## The amount of "hits" this token inflicts when attacking.
 @export var damage : float = 1.0
 
 ## The chance for any attack this token makes to miss, dealing reduced damage.
+## [br][code]1.0[/code] means this token will always hit, not accounting for
+## target evasion.
+## [br][code]0.0[/code] means this token will always miss.
 @export_range(0.0, 1.0, 0.01, "suffix:/1.0")  var accuracy : float = 0.8
 
 func backsolve_command(beat : int) -> Command:
@@ -485,8 +492,8 @@ func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void
 		moment_accuracy *= 0.5
 	if target_visibility == 1: moment_accuracy *= 0.5
 	var enemy : Token = enemy_tiles[target]
-	var shot : float = randf()
-	if shot <= moment_accuracy and shot >= enemy.evasion:
+	var shot : float = randf() - enemy.evasion
+	if shot < moment_accuracy and shot > 0.0:
 		enemy.deal_damage(damage)
 	else:
 		enemy.deal_damage(damage * 0.5)
