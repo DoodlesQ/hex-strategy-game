@@ -48,9 +48,9 @@ class Aim:
 		token.tween_to_aim(direction, func():
 			token.target_tile = target
 			token.generate_vision(beat)
-			var target_data : Array = token.scan_for_enemy()
-			if len(target_data) > 0:
-				token.act_on_enemy(beat, target_data[0], target_data[1])
+			var targeted : Vector3 = token.scan_for_enemy()
+			if targeted.is_finite():
+				token.act_on_enemy(beat, targeted)
 			callback.call()
 		, 1.0)
 
@@ -73,9 +73,9 @@ class Watch:
 		token.focused = false
 		token.target_tile = Vector3.INF
 		token.generate_vision(beat)
-		var target_data : Array = token.scan_for_enemy()
-		if len(target_data) > 0:
-			token.act_on_enemy(beat, target_data[0], target_data[1])
+		var targeted : Vector3 = token.scan_for_enemy()
+		if targeted.is_finite():
+			token.act_on_enemy(beat, targeted)
 		callback.call()
 
 class Undefined:
