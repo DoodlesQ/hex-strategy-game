@@ -345,6 +345,7 @@ func _line_of_sight(center : Vector3, trie : Array[Vector3], focus : bool) -> vo
 			if partial: partial_visible_tiles.append(point)
 			else: visible_tiles.append(point)
 
+## Animate token to aim in direction [param direction]
 func tween_to_aim(direction : float, callback : Callable, speed : float = 1.0) -> Tween:
 	var tween : Tween = self.create_tween()
 	look_smooth = true
@@ -360,39 +361,7 @@ func tween_to_aim(direction : float, callback : Callable, speed : float = 1.0) -
 		callback.call()
 	)
 	return tween
-
-func scan_for_enemy() -> Array:
-	if len(enemy_tiles) > 0:
-		var closest : float = INF
-		var targets : Array[Vector3] = []
-		for e : Vector3 in enemy_tiles:
-			var e_distance : float = Cubic.distance(e, Vector3.ZERO)
-			if e_distance <= closest:
-				closest = e_distance
-				targets.append(e + cubic)
-		var target : Vector3 = targets[0]
-		if len(targets) > 1: target = targets.pick_random()
-		var target_visibility : int = 0
-		if target in partial_visible_tiles: target_visibility = 1
-		if target in visible_tiles: target_visibility = 2
-		print("ENEMY SPOTTED @ ", target, ", VISIBILITY ", target_visibility)
-		return [target, target_visibility]
-	return []
-
-func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void:
-	var notice : float = 1.0
-	if target_visibility == 0:
-		var aim_to : float = Cubic.get_angle(target - cubic)
-		aim_to = wrapf(snappedf(aim_to, Cell.PI_6 / 2), -PI, PI)
-		tween_to_aim(aim_to, func(): generate_vision(beat), 0.5)
-		alert = true
-		target_tile = target
-		notice = randf() - 0.25
-	if target_visibility == 1: notice = randf()
-	if notice > 0.5:
-		print("SHOT FIRED")
-	else:
-		print("SHOT MISSED")
+	
 
 # ______ BEAT EXECUTION ______
 
@@ -457,6 +426,48 @@ func perform_command_to_beat(beat : int) -> void:
 	
 	if beat == 3: reset()
 
+
+## Scan the current generated visible spaces from [method generate_vision] for
+## tokens of a differing faction.
+## [br]Returns an array containing the nearest enemy found and at what
+## visibility that enemy was found (0 for peripheral, 1 for partial, 2 for
+## fully visible)
+func scan_for_enemy() -> Array:
+	if len(enemy_tiles) > 0:
+		var closest : float = INF
+		var targets : Array[Vector3] = []
+		for e : Vector3 in enemy_tiles:
+			var e_distance : float = Cubic.distance(e, Vector3.ZERO)
+			if e_distance <= closest:
+				closest = e_distance
+				targets.append(e + cubic)
+		var target : Vector3 = targets[0]
+		if len(targets) > 1: target = targets.pick_random()
+		var target_visibility : int = 0
+		if target in partial_visible_tiles: target_visibility = 1
+		if target in visible_tiles: target_visibility = 2
+		print("ENEMY SPOTTED @ ", target, ", VISIBILITY ", target_visibility)
+		return [target, target_visibility]
+	return []
+
+## Initiate some act upon an enemy location's.
+## Token becomes [param alert] if the target is within peripheral and turns to
+## face it, otherwise it attempts to fire upon the target.
+func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void:
+	var notice : float = 1.0
+	if target_visibility == 0:
+		var aim_to : float = Cubic.get_angle(target - cubic)
+		aim_to = wrapf(snappedf(aim_to, Cell.PI_6 / 2), -PI, PI)
+		tween_to_aim(aim_to, func(): generate_vision(beat), 0.5)
+		alert = true
+		target_tile = target
+		notice = randf() - 0.25
+	if target_visibility == 1: notice = randf()
+	if notice > 0.5:
+		print("SHOT FIRED")
+	else:
+		print("SHOT MISSED")
+		
 ## Reset this token's beats to the values defined in [member BLANK_BEAT].
 func reset() -> void:
 	beats = [
