@@ -601,7 +601,8 @@ func _draw() -> void:
 		)
 	
 	if debug_draw_vision:
-		draw_vision()
+		pass
+		#draw_vision()
 	
 	match faction:
 		Faction.ONE:

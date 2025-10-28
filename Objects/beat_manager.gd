@@ -82,7 +82,9 @@ func _input(event : InputEvent) -> void:
 							#token.focused = true
 							var i : int = -20
 							var buttons : Array[Button] = []
-							for type : Command.Type in token.command_options:
+							var options : Array[Command.Type] = [Command.Type.UNDEFINED]
+							options.append_array(token.command_options)
+							for type : Command.Type in options:
 								buttons.append(Button.new())
 								buttons[-1].position = token.position + Vector2(i, 0)
 								buttons[-1].text = str(type)
@@ -212,6 +214,18 @@ func _draw() -> void:
 						var b : Vector3 = token.backsolve(i)
 						var a : float = 0.2 if i != beat_editing else 0.5
 						draw_circle(Cubic.to_real(b, grid), 50 * a, Color(1,1,1,a))
+						var com : Command = token.backsolve_command(i)
+						var draw_cone : bool = false
+						var dir : float = 0.0
+						if com.type == Command.Type.AIM:
+							draw_cone = true
+							dir = com.direction
+						if com.type == Command.Type.AIM_TARGET:
+							draw_cone = true
+							dir = Cubic.get_angle(com.target - b)
+						if draw_cone:
+							Token.draw_vision_cone(self, token, dir, Cubic.to_real(b, grid), 0.25)
+						
 
 		var c : float = 1.0 if tool == Tool.COMMAND else 0.0
 		var d : float = 1.0 if do_command else 0.0
