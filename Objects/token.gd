@@ -402,6 +402,18 @@ var health : float
 ## [br][code]0.0[/code] means this token will always miss.
 @export_range(0.0, 1.0, 0.01, "suffix:/1.0")  var accuracy : float = 0.8
 
+@export_subgroup("Advanced")
+
+## The factor by which damage is reduced if an attack misses.
+@export_range(0.0, 1.0, 0.01) var miss_penalty : float = 0.5
+
+## The factor by which accuracy falls off if the target is in partial cover.
+@export_range(0.0, 1.0, 0.01) var partial_penalty : float = 0.5
+
+## The factor by which accuracy falls off if the target is in periphery.
+## This factor is multiplicative with [member partial_penalty].
+@export_range(0.0, 1.0, 0.01) var periphery_penalty : float = 0.5
+
 func backsolve_command(beat : int) -> Command:
 	var c : Command = beats[beat].command
 	while c.type == Command.Type.UNDEFINED:
@@ -486,20 +498,21 @@ func act_on_enemy(beat : int, target : Vector3, target_visibility : int) -> void
 	if target_visibility == 0:
 		var aim_to : float = Cubic.get_angle(target - cubic)
 		aim_to = wrapf(snappedf(aim_to, Cell.PI_6 / 2), -PI, PI)
-		tween_to_aim(aim_to, func(): generate_vision(beat), 0.5)
+		tween_to_aim(aim_to, func(): generate_vision(beat), 0.6)
 		alert = true
 		target_tile = target
-		moment_accuracy *= 0.5
-	if target_visibility == 1: moment_accuracy *= 0.5
+		moment_accuracy *= periphery_penalty
+	if target_visibility == 1: moment_accuracy *= partial_penalty
 	var enemy : Token = enemy_tiles[target]
 	var shot : float = randf() - enemy.evasion
 	if shot < moment_accuracy and shot > 0.0:
 		enemy.deal_damage(damage)
 	else:
-		enemy.deal_damage(damage * 0.5)
+		enemy.deal_damage(damage * miss_penalty)
 
 func deal_damage(hits : float) -> void:
 	health = max(0.0, health - hits)
+	print("DAMAGE DEALT. TOKEN @ %s REDUCED TO HEALTH " % cubic, health)
 
 ## Reset this token's beats to the values defined in [member BLANK_BEAT].
 func reset() -> void:
