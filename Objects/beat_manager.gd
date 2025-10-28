@@ -115,6 +115,12 @@ func _input(event : InputEvent) -> void:
 				tool = Tool.COMMAND
 				beat_editing -= 1
 		
+		if event.is_action("change_faction"):
+			if control_faction == Token.Faction.ONE:
+				control_faction = Token.Faction.TWO
+			else:
+				control_faction = Token.Faction.ONE
+		
 		if tool == Tool.COMMAND:
 			if event.is_action("beat_cycle_up"):
 				beat_editing += 1 if beat_editing < 3 else -3
@@ -239,11 +245,13 @@ func _process(_delta : float) -> void:
 			match command:
 				Command.Type.AIM, Command.Type.AIM_TARGET:
 					var aim_from : Vector3 = selected.backsolve(beat_editing)
-					selected.target_tile = Cubic.snapped(get_mouse_cubic())
-					selected.facing = Cubic.get_angle(selected.target_tile - aim_from)
-					selected.calculate_view_cones()
-					selected.generate_vision(beat_editing)
-					selected.queue_redraw()
+					var target_tile : Vector3 = Cubic.snapped(get_mouse_cubic())
+					if target_tile != aim_from:
+						selected.target_tile = target_tile
+						selected.facing = Cubic.get_angle(target_tile - aim_from)
+						selected.calculate_view_cones()
+						selected.generate_vision(beat_editing)
+						selected.queue_redraw()
 				_:
 					confirm_command()
 			

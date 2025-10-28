@@ -532,14 +532,17 @@ func act_on_enemy(beat : int, target : Vector3) -> void:
 		moment_accuracy *= periphery_penalty
 	if enemy.visibility == 1: moment_accuracy *= partial_penalty
 	var shot : float = randf() - enemy.token.evasion
+	var location : Vector3 = backsolve(beat)
 	if shot < moment_accuracy and shot > 0.0:
-		enemy.token.deal_damage(damage)
+		enemy.token.deal_damage(damage, location)
 	else:
-		enemy.token.deal_damage(damage * miss_penalty)
+		enemy.token.deal_damage(damage * miss_penalty, location)
 
-func deal_damage(hits : float) -> void:
+func deal_damage(hits : float, from : Vector3 = Vector3.INF) -> void:
 	health = max(0.0, health - hits)
 	print("DAMAGE DEALT. TOKEN @ %s REDUCED TO HEALTH " % cubic, health)
+	alert = true
+	if from.is_finite(): target_tile = from
 
 ## Reset this token's beats to the values defined in [member BLANK_BEAT].
 func reset() -> void:
@@ -600,9 +603,8 @@ func _draw() -> void:
 			false
 		)
 	
-	if debug_draw_vision:
-		pass
-		#draw_vision()
+	if action == Action.NONE and debug_draw_vision:
+		draw_vision()
 	
 	match faction:
 		Faction.ONE:
@@ -635,7 +637,10 @@ func draw_vision(center : Vector2 = Vector2.ZERO) -> void:
 		draw_colored_polygon(hex, Color(1,0,0,0.0))
 	
 	draw_set_transform(Vector2.ZERO)
-	draw_vision_cone(self, self, facing, center)
+	if focused:
+		draw_vision_cone(self, self, facing, center)
+	else:
+		draw_periphery(self, self, center)
 
 static func draw_vision_cone(
 		canvas : CanvasItem,
