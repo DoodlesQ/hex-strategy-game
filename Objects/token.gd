@@ -293,39 +293,41 @@ func _calculate_view_cone(tries : Array[Array], view_angle : float) -> Array[Arr
 ## Uses [member radial_distance] if [member focused] is [code]false[/code],
 ## and uses [member focus_distance] limited by [member focus angle] and
 ## [member periphery] if [member focused] is [code]true[/code].
-func generate_vision(beat : int) -> void:
+func generate_vision(beat : int, private : bool = true) -> void:
 	var center : Vector3 = backsolve(beat)
 	visible_tiles = []
 	partial_visible_tiles = []
 	periphery_tiles = []
 	enemy_tiles = {}
 	for trie : Array[Vector3] in _tries_radial:
-		_line_of_sight(beat, center, trie, false)
+		_line_of_sight(beat, center, trie, false, private)
 	if focused:
 		for trie : Array[Vector3] in _focus_cone:
-			_line_of_sight(beat, center, trie, true)
+			_line_of_sight(beat, center, trie, true, private)
 		for trie : Array[Vector3] in _periphery_cone:
-			_line_of_sight(beat, center, trie, false)
+			_line_of_sight(beat, center, trie, false, private)
 
-func _line_of_sight(beat : int, center : Vector3, trie : Array[Vector3], focus : bool) -> void:
+func _line_of_sight(
+		beat : int,
+		center : Vector3,
+		trie : Array[Vector3],
+		focus : bool,
+		private : bool
+	) -> void:
 	var partial : bool = !focus
 	# Check every tile along trie
 	for point : Vector3 in trie:
-		var skip : bool = false
 		# If tile is the center, skip it.
 		if point.is_zero_approx(): continue
 		# If this tile is already fully visible, it can be skipped.
-		if point in visible_tiles: skip = true
+		if point in visible_tiles: continue
 		# If this line of sight is only partial vision, and the tile is already
 		#  partially visible, it can be skipped.
-		elif partial and point in partial_visible_tiles: skip = true
+		elif partial and point in partial_visible_tiles: continue
 		# If this line of sight is only peripheral vision, and the tile is
 		#  already in periphery, it can be skipped.
-		elif not focus and point in periphery_tiles: skip = true
-		#  If it was, the line of sight ends here. Enemies are solid.
-		#  If it wasn't, then just skip this tile and continue the line.
-		if skip:
-			continue
+		elif not focus and point in periphery_tiles: continue
+			
 		# If we reach this line and this tile is in periphery, we know we aren't
 		#  checking peripheral vision (or it would've been skipped). As such,
 		#  erase it from periphery, since we're about to update our vision on it.
@@ -340,27 +342,37 @@ func _line_of_sight(beat : int, center : Vector3, trie : Array[Vector3], focus :
 		if not other:
 			# If there aren't, check all the token positions at this beat,
 			#  and if there's a token at this tile *during* this beat, then
-			#  actually there is a cell here.
+			#  actually there should be a cell here.
 			for t : Token in manager.tokens:
 				if t == self: continue
+				if private and t.faction != faction: continue
 				if point == t.backsolve(beat) - center:
 					#print(t.backsolve(beat), t.cubic)
 					other = t
 		# If we found a cell (or backsolved token) at this beat, and it isn't
 		#  ourself, then check it for collisions
 		if other and other != self:
-			# If the cell is a token, and (just to double check), it is actually
-			#  at this tile during this beat, we need to check it for vision.
-			if other is Token and other.backsolve(beat) - center == point:
-				var enemy_visibility : int = 2
-				if not focus: enemy_visibility = 0
-				elif partial: enemy_visibility = 1
+			if other is Token:
+				var backsolved : Vector3 = other.backsolve(beat) - center
+				# If other is a token, double check that it actually will be
+				#  here during this beat.
+				if (not private or other.faction == faction) and backsolved == point:
+					# If this isn't a friendlies-only check, then add any
+					#  enemies we find to the enemy list.
+					if other.faction != faction and not private:
+						var enemy_visibility : int = 2
+						if not focus: enemy_visibility = 0
+						elif partial: enemy_visibility = 1
+						
+						if point in enemy_tiles.keys():
+							if enemy_tiles[point].visibility < enemy_visibility:
+								enemy_tiles[point].visibility = enemy_visibility
+						else:
+							enemy_tiles[point] = {
+								"token": other, "visibility": enemy_visibility
+							}
+					# Other token-exclusive behavior could go here
 				
-				if point in enemy_tiles.keys():
-					if enemy_tiles[point].visibility < enemy_visibility:
-						enemy_tiles[point].visibility = enemy_visibility
-				else:
-					enemy_tiles[point] = {"token": other, "visibility": enemy_visibility}
 			# If we're checking for periphery, and it isn't transparent,
 			#  then the line stops here.
 			if not focus:
