@@ -246,21 +246,27 @@ func _draw() -> void:
 					for i : int in range(4):
 						var b : Vector3 = token.backsolve(i)
 						var a : float = 0.2 if i != beat_editing else 0.5
-						draw_circle(Cubic.to_real(b, grid), 50 * a, Color(1,1,1,a))
-						var com : Command = token.backsolve_command(i)
-						var draw_cone : bool = false
-						var dir : float = INF
-						match com.type:
-							Command.Type.AIM:
-								draw_cone = true
-								dir = com.direction
-							Command.Type.AIM_TARGET:
-								draw_cone = true
-								dir = Cubic.get_angle(com.target - b)
-						if draw_cone:
-							Token.draw_vision_cone(self, token, dir, Cubic.to_real(b, grid), a * 0.5)
-						elif com.type == Command.Type.WATCH:
-							Token.draw_periphery(self, token, Cubic.to_real(b, grid), a * 0.5)
+						draw_circle(
+							Cubic.to_real(b, grid),
+							grid.outer_radius * a,
+							Color(1,1,1,a))
+					var at : Vector3 = token.backsolve(beat_editing)
+					var com : Command = token.backsolve_command(beat_editing)
+					var alpha : float = 0.5
+					if token.beats[beat_editing].command != com: alpha = 0.2
+					var draw_cone : bool = false
+					var dir : float = INF
+					match com.type:
+						Command.Type.AIM:
+							draw_cone = true
+							dir = com.direction
+						Command.Type.AIM_TARGET:
+							draw_cone = true
+							dir = snappedf(Cubic.get_angle(com.target - at), Cell.PI_6 / 2)
+					if draw_cone:
+						Token.draw_vision_cone(self, token, dir, Cubic.to_real(at, grid), alpha)
+					elif com.type == Command.Type.WATCH:
+						Token.draw_periphery(self, token, Cubic.to_real(at, grid), alpha)
 						
 
 		var c : float = 1.0 if tool == Tool.COMMAND else 0.0
