@@ -47,10 +47,12 @@ class Aim:
 	func execute(beat : int, token : Token, callback : Callable) -> void:
 		token.tween_to_aim(direction, func():
 			token.target_tile = target
-			token.generate_vision(beat)
+			token.generate_vision(beat, false)
 			var targeted : Vector3 = token.scan_for_enemy()
 			if targeted.is_finite():
 				token.act_on_enemy(beat, targeted)
+			elif token.alert:
+				token.alert = false
 			callback.call()
 		, 1.0)
 
@@ -72,7 +74,7 @@ class Watch:
 	func execute(beat : int, token : Token, callback : Callable) -> void:
 		token.focused = false
 		token.target_tile = Vector3.INF
-		token.generate_vision(beat)
+		token.generate_vision(beat, false)
 		var targeted : Vector3 = token.scan_for_enemy()
 		if targeted.is_finite():
 			token.act_on_enemy(beat, targeted)

@@ -131,14 +131,20 @@ func tween_to_move(beat : int, callback : Callable) -> void:
 	print(next_command.type)
 	match next_command.type:
 		Command.Type.AIM:
+			print("AIM: ", next_command.direction)
 			face_towards = next_command.direction
 		Command.Type.AIM_TARGET:
+			print("AIM_T: ", next_command.target)
 			face_towards = Cubic.get_angle(next_command.target - move)
 		_:
+			print("NONE: ", final_position)
 			face_towards = position.angle_to_point(final_position) - Cell.PI_6
-	if alert:
+	if alert and target_tile.is_finite():
+		print("ALERT!")
 		if Command.is_overwritable(next_command.type):
+			print("NEW: ", target_tile)
 			face_towards = Cubic.get_angle(target_tile - move)
+	print(face_towards)
 	tween.tween_interval(randf() * 0.5)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
@@ -506,8 +512,6 @@ func perform_command_to_beat(beat : int) -> void:
 		debug_draw_vision = false
 		manager.confirm_beat_complete(cubic)
 	)
-	
-	if beat == 3: reset()
 
 
 ## Scan the current generated visible spaces from [method generate_vision] for
@@ -553,13 +557,18 @@ func act_on_enemy(beat : int, target : Vector3) -> void:
 	else:
 		enemy.token.deal_damage(damage * miss_penalty, location)
 
+## Subtract [param hits] from this token's [member health].
+## [br][param from]: The location of the source of damage (optional).
 func deal_damage(hits : float, from : Vector3 = Vector3.INF) -> void:
 	health = max(0.0, health - hits)
 	print("DAMAGE DEALT. TOKEN @ %s REDUCED TO HEALTH " % cubic, health)
 	alert = true
 	if from.is_finite(): target_tile = from
+	if is_zero_approx(health):
+		manager.remove_token(self)
 
-## Reset this token's beats to the values defined in [member BLANK_BEAT].
+## Reset this token's beats to the values defined in [member BLANK_BEAT],
+## and ready it for the next turn.
 func reset() -> void:
 	beats = [
 		BLANK_BEAT.duplicate(), BLANK_BEAT.duplicate(),
@@ -579,7 +588,7 @@ func _ready() -> void:
 	_tries_radial = _pregenerate_tries(radial_distance)
 	_tries_focus = _pregenerate_tries(focus_distance)
 	health = max_health
-	#last_facing = 0.0
+	last_facing = facing
 
 func _draw() -> void:
 	draw_line(

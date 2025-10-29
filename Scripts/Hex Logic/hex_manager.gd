@@ -38,6 +38,13 @@ func get_cell_at(location : Vector3) -> Cell:
 	var snap = Cubic.snapped(location, 0.5)
 	if snap in cell_hash: return cell_hash[snap]
 	return
+
+func remove_cell_at(location : Vector3) -> void:
+	assert(location in cell_hash, "Cannot remove cell %s, does not exist" % location)
+	var cell : Cell = get_cell_at(location)
+	cell_hash.erase(location)
+	cell.queue_free()
+	
 	
 ## Update the recorded position of a [Cell] in the hashmap.
 ## This should be run every time a cell's cubic position changes, to ensure

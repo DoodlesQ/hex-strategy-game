@@ -126,7 +126,12 @@ func _input(event : InputEvent) -> void:
 				beat_editing += 1 if beat_editing < 3 else -3
 			if event.is_action("beat_cycle_down"):
 				beat_editing -= 1 if beat_editing > 0 else -3
-				
+
+func remove_token(token : Token) -> void:
+	assert(token in tokens, "Cannot remove token %s, not in token list." % token)
+	tokens.erase(token)
+	confirm_beat_complete(token.cubic)
+	remove_cell_at(token.cubic)
 
 func confirm_turn() -> void:
 	var invalid_tokens : Array[Token] = validate_tokens()
@@ -155,6 +160,8 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 			beat_perform += 1
 		if beat_perform >= 4:
 			print("TURN COMPLETED")
+			for token : Token in tokens:
+				token.reset()
 			queue_redraw()
 			can_edit = true
 		else: perform_beat_step()
