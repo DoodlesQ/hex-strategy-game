@@ -1,0 +1,1458 @@
+[gd_scene load_steps=9 format=3 uid="uid://bkm2w6tcthub1"]
+
+[ext_resource type="Script" uid="uid://dyyapdx6yt3m" path="res://Objects/beat_manager.gd" id="1_1ofuf"]
+[ext_resource type="Script" uid="uid://oqd0b8grpmgf" path="res://Scripts/Hex Logic/hex_grid.gd" id="2_776uk"]
+[ext_resource type="Script" uid="uid://b0gpnolicy1rx" path="res://Objects/token.gd" id="3_776uk"]
+[ext_resource type="Script" uid="uid://37ve68c2p8lh" path="res://camera.gd" id="3_x8jbu"]
+[ext_resource type="Script" uid="uid://cpv5oxnwgu4rj" path="res://Prototype 0.1a/label.gd" id="4_0dnpp"]
+[ext_resource type="Script" uid="uid://d2rjtdert1f0f" path="res://Scripts/Hex Logic/cell.gd" id="4_vaoif"]
+[ext_resource type="Texture2D" uid="uid://ck22ks53ko3tn" path="res://Prototype 0.1a/map.jpg" id="5_776uk"]
+
+[sub_resource type="Resource" id="Resource_wg6qt"]
+script = ExtResource("2_776uk")
+outer_radius = 10.0
+metadata/_custom_type_script = "uid://oqd0b8grpmgf"
+
+[node name="PrototypeTest" type="Node2D"]
+
+[node name="BeatManager" type="Node2D" parent="."]
+position = Vector2(858, 443)
+script = ExtResource("1_1ofuf")
+grid = SubResource("Resource_wg6qt")
+_show_grid = true
+_grid_size = 55
+_grid_opacity = 0.3
+metadata/_custom_type_script = "uid://dyyapdx6yt3m"
+
+[node name="Token" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 268.46786)
+script = ExtResource("3_776uk")
+faction = 1
+facing = -1.0471975511965976
+cubic = Vector3(-25, 28, -3)
+metadata/_custom_type_script = "uid://b0gpnolicy1rx"
+
+[node name="Token2" type="Node2D" parent="BeatManager"]
+position = Vector2(-345, 268.46786)
+script = ExtResource("3_776uk")
+faction = 1
+facing = -1.0471975511965976
+cubic = Vector3(-23, 27, -4)
+metadata/_custom_type_script = "uid://b0gpnolicy1rx"
+
+[node name="Token3" type="Node2D" parent="BeatManager"]
+position = Vector2(-330, 294.44864)
+script = ExtResource("3_776uk")
+faction = 1
+facing = -1.0471975511965976
+cubic = Vector3(-22, 28, -6)
+metadata/_custom_type_script = "uid://b0gpnolicy1rx"
+
+[node name="Token4" type="Node2D" parent="BeatManager"]
+position = Vector2(-360, 294.44864)
+script = ExtResource("3_776uk")
+faction = 1
+move_limit = 2
+move_length = 2
+facing = -1.0471975511965976
+cubic = Vector3(-24, 29, -5)
+metadata/_custom_type_script = "uid://b0gpnolicy1rx"
+
+[node name="Cell" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 233.82686)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-25, 26, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell2" type="Node2D" parent="BeatManager"]
+position = Vector2(-360, 225.16661)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-24, 25, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell3" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 216.50635)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-25, 25, 0)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell4" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 207.8461)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-26, 25, 1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell5" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 190.52559)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-26, 24, 2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell6" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 181.86534)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-27, 24, 3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell7" type="Node2D" parent="BeatManager"]
+position = Vector2(-420, 173.20508)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-28, 24, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell8" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 199.18584)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-25, 24, 1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell9" type="Node2D" parent="BeatManager"]
+position = Vector2(-420, 190.52559)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-28, 25, 3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell10" type="Node2D" parent="BeatManager"]
+position = Vector2(-435, 199.18584)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-29, 26, 3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell11" type="Node2D" parent="BeatManager"]
+position = Vector2(-420, 207.8461)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-28, 26, 2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell12" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 216.50635)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-27, 26, 1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell13" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 225.16661)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-26, 26, 0)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell14" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 242.4871)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-26, 27, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell15" type="Node2D" parent="BeatManager"]
+position = Vector2(-240, 311.76913)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-16, 26, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell16" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 303.1089)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-15, 25, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell17" type="Node2D" parent="BeatManager"]
+position = Vector2(-210, 294.44864)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-14, 24, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell18" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 285.7884)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-13, 23, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell19" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 303.1089)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-13, 24, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell20" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 320.4294)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-13, 25, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell21" type="Node2D" parent="BeatManager"]
+position = Vector2(-210, 329.08966)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-14, 26, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell22" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 320.4294)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-15, 26, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell23" type="Node2D" parent="BeatManager"]
+position = Vector2(-210, 311.76913)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-14, 25, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell24" type="Node2D" parent="BeatManager"]
+position = Vector2(-420, 346.41016)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-28, 34, -6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell25" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 355.0704)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-27, 34, -7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell26" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 346.41016)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-26, 33, -7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell27" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 337.7499)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-27, 33, -6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell28" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 337.7499)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-25, 32, -7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell29" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 355.0704)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-25, 33, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell30" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 372.39093)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-25, 34, -9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell31" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 381.05118)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-26, 35, -9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell32" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 363.73068)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-26, 34, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell33" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 372.39093)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-27, 35, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell34" type="Node2D" parent="BeatManager"]
+position = Vector2(-420, 381.05118)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-28, 36, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell35" type="Node2D" parent="BeatManager"]
+position = Vector2(-420, 363.73068)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-28, 35, -7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell36" type="Node2D" parent="BeatManager"]
+position = Vector2(-435, 372.39093)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-29, 36, -7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell37" type="Node2D" parent="BeatManager"]
+position = Vector2(-435, 355.0704)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-29, 35, -6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell38" type="Node2D" parent="BeatManager"]
+position = Vector2(-360, 346.41016)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-24, 32, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell39" type="Node2D" parent="BeatManager"]
+position = Vector2(-345, 337.7499)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-23, 31, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell40" type="Node2D" parent="BeatManager"]
+position = Vector2(-345, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-23, 32, -9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell41" type="Node2D" parent="BeatManager"]
+position = Vector2(-330, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-22, 32, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell42" type="Node2D" parent="BeatManager"]
+position = Vector2(-315, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-21, 31, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell43" type="Node2D" parent="BeatManager"]
+position = Vector2(-345, 372.39093)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-23, 33, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell44" type="Node2D" parent="BeatManager"]
+position = Vector2(-360, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-24, 33, -9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell45" type="Node2D" parent="BeatManager"]
+position = Vector2(-315, 372.39093)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-21, 32, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell46" type="Node2D" parent="BeatManager"]
+position = Vector2(-330, 381.05118)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-22, 33, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell47" type="Node2D" parent="BeatManager"]
+position = Vector2(-300, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-20, 31, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell48" type="Node2D" parent="BeatManager"]
+position = Vector2(-285, 372.39093)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-19, 31, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell49" type="Node2D" parent="BeatManager"]
+position = Vector2(-285, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-19, 30, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell50" type="Node2D" parent="BeatManager"]
+position = Vector2(-270, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-18, 30, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell51" type="Node2D" parent="BeatManager"]
+position = Vector2(-270, 381.05118)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-18, 31, -13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell52" type="Node2D" parent="BeatManager"]
+position = Vector2(-255, 372.39093)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-17, 30, -13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell53" type="Node2D" parent="BeatManager"]
+position = Vector2(-255, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-17, 29, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell54" type="Node2D" parent="BeatManager"]
+position = Vector2(-240, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-16, 29, -13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell55" type="Node2D" parent="BeatManager"]
+position = Vector2(-240, 381.05118)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-16, 30, -14)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell56" type="Node2D" parent="BeatManager"]
+position = Vector2(-450, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-30, 36, -6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell57" type="Node2D" parent="BeatManager"]
+position = Vector2(-450, 346.41016)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-30, 35, -5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell58" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 337.7499)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 35, -4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell59" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 36, -5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell60" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 329.08966)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 35, -3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell61" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 346.41016)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 36, -4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell62" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 37, -5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell63" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 372.39093)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-15, 29, -14)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell64" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-15, 28, -13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell65" type="Node2D" parent="BeatManager"]
+position = Vector2(-210, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-14, 28, -14)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell66" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-13, 27, -14)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell67" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 372.39093)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-13, 28, -15)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell68" type="Node2D" parent="BeatManager"]
+position = Vector2(-180, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-12, 27, -15)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell69" type="Node2D" parent="BeatManager"]
+position = Vector2(-165, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-11, 26, -15)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell70" type="Node2D" parent="BeatManager"]
+position = Vector2(-165, 372.39093)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-11, 27, -16)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell72" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 346.41016)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 25, -15)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell73" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 355.0704)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 25, -16)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell74" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 329.08966)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 24, -14)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell75" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 337.7499)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 24, -15)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell76" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 320.4294)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 23, -14)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell77" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 311.76913)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 23, -13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell78" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 303.1089)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 22, -13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell79" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 294.44864)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 22, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell80" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 285.7884)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 21, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell81" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 268.46786)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 20, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell82" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 259.80762)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 20, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell83" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 277.12814)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 21, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell84" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 251.14737)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 19, -10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell85" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 242.4871)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 19, -9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell86" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 233.82686)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-9, 18, -9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell87" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 225.16661)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 18, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell88" type="Node2D" parent="BeatManager"]
+position = Vector2(-180, 311.76913)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-12, 24, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell89" type="Node2D" parent="BeatManager"]
+position = Vector2(-165, 320.4294)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-11, 24, -13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell90" type="Node2D" parent="BeatManager"]
+position = Vector2(-165, 303.1089)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-11, 23, -12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell91" type="Node2D" parent="BeatManager"]
+position = Vector2(-180, 294.44864)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-12, 23, -11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell92" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 311.76913)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 34, -2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell93" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 320.4294)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 34, -3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell94" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 303.1089)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 33, -2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell95" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 294.44864)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 33, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell96" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 277.12814)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 32, 0)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell97" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 268.46786)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 32, 1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell98" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 285.7884)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 33, 0)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell99" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 303.1089)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 34, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell100" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 259.80762)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 31, 1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell101" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 251.14737)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 31, 2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell102" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 242.4871)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 30, 2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell103" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 233.82686)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 30, 3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell104" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 225.16661)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 29, 3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell105" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 216.50635)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 29, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell106" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 207.8461)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 28, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell107" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 190.52559)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 27, 5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell108" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 199.18584)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 28, 5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell109" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 181.86534)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 27, 6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell110" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 173.20508)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 26, 6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell111" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 155.88457)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 25, 7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell112" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 164.54483)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 26, 7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell113" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 147.22432)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 25, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell114" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 138.56407)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 24, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell115" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 129.90381)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 24, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell116" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 121.24355)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 23, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell117" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 112.583305)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 22, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell118" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 103.92305)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 22, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell119" type="Node2D" parent="BeatManager"]
+position = Vector2(-495, 112.583305)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-33, 23, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell120" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 95.262794)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 21, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell121" type="Node2D" parent="BeatManager"]
+position = Vector2(-480, 86.60254)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-32, 21, 11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell122" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 77.94228)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 20, 11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell123" type="Node2D" parent="BeatManager"]
+position = Vector2(-450, 86.60254)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-30, 20, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell124" type="Node2D" parent="BeatManager"]
+position = Vector2(-450, 69.282036)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-30, 19, 11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell125" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 60.621777)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 19, 12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell126" type="Node2D" parent="BeatManager"]
+position = Vector2(-450, 51.961525)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-30, 18, 12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell127" type="Node2D" parent="BeatManager"]
+position = Vector2(-465, 43.30127)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-31, 18, 13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell128" type="Node2D" parent="BeatManager"]
+position = Vector2(-450, 34.641018)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-30, 17, 13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell129" type="Node2D" parent="BeatManager"]
+position = Vector2(-435, 43.30127)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-29, 17, 12)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell130" type="Node2D" parent="BeatManager"]
+position = Vector2(-435, 60.621777)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-29, 18, 11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell131" type="Node2D" parent="BeatManager"]
+position = Vector2(-435, 25.980762)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-29, 16, 13)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell132" type="Node2D" parent="BeatManager"]
+position = Vector2(-450, 17.320509)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-30, 16, 14)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell133" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 43.30127)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-27, 16, 11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell134" type="Node2D" parent="BeatManager"]
+position = Vector2(-420, 51.961525)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-28, 17, 11)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell135" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 60.621777)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-27, 17, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell136" type="Node2D" parent="BeatManager"]
+position = Vector2(-405, 77.94228)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-27, 18, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell137" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 86.60254)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-26, 18, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell138" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 69.282036)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-26, 17, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell139" type="Node2D" parent="BeatManager"]
+position = Vector2(-390, 51.961525)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-26, 16, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell140" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 43.30127)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-25, 15, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell141" type="Node2D" parent="BeatManager"]
+position = Vector2(-375, 60.621777)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-25, 16, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell142" type="Node2D" parent="BeatManager"]
+position = Vector2(-360, 51.961525)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-24, 15, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell143" type="Node2D" parent="BeatManager"]
+position = Vector2(-360, 34.641018)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-24, 14, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell144" type="Node2D" parent="BeatManager"]
+position = Vector2(-345, 25.980762)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-23, 13, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell145" type="Node2D" parent="BeatManager"]
+position = Vector2(-330, 34.641018)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-22, 13, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell146" type="Node2D" parent="BeatManager"]
+position = Vector2(-345, 43.30127)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-23, 14, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell147" type="Node2D" parent="BeatManager"]
+position = Vector2(-330, 51.961525)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-22, 14, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell148" type="Node2D" parent="BeatManager"]
+position = Vector2(-345, 60.621777)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-23, 15, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell149" type="Node2D" parent="BeatManager"]
+position = Vector2(-360, 69.282036)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-24, 16, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell150" type="Node2D" parent="BeatManager"]
+position = Vector2(-315, 77.94228)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-21, 15, 6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell151" type="Node2D" parent="BeatManager"]
+position = Vector2(-300, 86.60254)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-20, 15, 5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell152" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 207.8461)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-10, 17, -7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell153" type="Node2D" parent="BeatManager"]
+position = Vector2(-165, 199.18584)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-11, 17, -6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell154" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 190.52559)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-10, 16, -6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell155" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 199.18584)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-9, 16, -7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell156" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 216.50635)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-9, 17, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell157" type="Node2D" parent="BeatManager"]
+position = Vector2(-120, 207.8461)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-8, 16, -8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell158" type="Node2D" parent="BeatManager"]
+position = Vector2(-165, 181.86534)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-11, 16, -5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell159" type="Node2D" parent="BeatManager"]
+position = Vector2(-180, 173.20508)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-12, 16, -4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell160" type="Node2D" parent="BeatManager"]
+position = Vector2(-180, 190.52559)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-12, 17, -5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell161" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 181.86534)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-13, 17, -4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell162" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 164.54483)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-13, 16, -3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell163" type="Node2D" parent="BeatManager"]
+position = Vector2(-195, 147.22432)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-13, 15, -2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell164" type="Node2D" parent="BeatManager"]
+position = Vector2(-180, 155.88457)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-12, 15, -3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell165" type="Node2D" parent="BeatManager"]
+position = Vector2(-165, 164.54483)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-11, 15, -4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell166" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 173.20508)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-10, 15, -5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell167" type="Node2D" parent="BeatManager"]
+position = Vector2(-135, 181.86534)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-9, 15, -6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell168" type="Node2D" parent="BeatManager"]
+position = Vector2(-210, 173.20508)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-14, 17, -3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell169" type="Node2D" parent="BeatManager"]
+position = Vector2(-210, 155.88457)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-14, 16, -2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell170" type="Node2D" parent="BeatManager"]
+position = Vector2(-210, 138.56407)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-14, 15, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell171" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 164.54483)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-15, 17, -2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell172" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 147.22432)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-15, 16, -1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell173" type="Node2D" parent="BeatManager"]
+position = Vector2(-240, 138.56407)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-16, 16, 0)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell174" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 129.90381)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-15, 15, 0)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell175" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 112.583305)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-15, 14, 1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell176" type="Node2D" parent="BeatManager"]
+position = Vector2(-240, 121.24355)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-16, 15, 1)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell177" type="Node2D" parent="BeatManager"]
+position = Vector2(-255, 112.583305)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-17, 15, 2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell178" type="Node2D" parent="BeatManager"]
+position = Vector2(-240, 103.92305)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-16, 14, 2)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell179" type="Node2D" parent="BeatManager"]
+position = Vector2(-240, 86.60254)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-16, 13, 3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell180" type="Node2D" parent="BeatManager"]
+position = Vector2(-255, 95.262794)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-17, 14, 3)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell181" type="Node2D" parent="BeatManager"]
+position = Vector2(-270, 86.60254)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-18, 14, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell182" type="Node2D" parent="BeatManager"]
+position = Vector2(-255, 77.94228)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-17, 13, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell183" type="Node2D" parent="BeatManager"]
+position = Vector2(-270, 69.282036)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-18, 13, 5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell184" type="Node2D" parent="BeatManager"]
+position = Vector2(-255, 60.621777)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-17, 12, 5)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell185" type="Node2D" parent="BeatManager"]
+position = Vector2(-270, 51.961525)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-18, 12, 6)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell186" type="Node2D" parent="BeatManager"]
+position = Vector2(-285, 43.30127)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-19, 12, 7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell187" type="Node2D" parent="BeatManager"]
+position = Vector2(-270, 34.641018)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-18, 11, 7)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell188" type="Node2D" parent="BeatManager"]
+position = Vector2(-285, 25.980762)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-19, 11, 8)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell189" type="Node2D" parent="BeatManager"]
+position = Vector2(-285, 8.6602545)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-19, 10, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell190" type="Node2D" parent="BeatManager"]
+position = Vector2(-300, 17.320509)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-20, 11, 9)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell191" type="Node2D" parent="BeatManager"]
+position = Vector2(-300, 0)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-20, 10, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell192" type="Node2D" parent="BeatManager"]
+position = Vector2(-285, -8.6602545)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-19, 9, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell193" type="Node2D" parent="BeatManager"]
+position = Vector2(-315, 8.6602545)
+script = ExtResource("4_vaoif")
+visibility = 0
+cubic = Vector3(-21, 11, 10)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell194" type="Node2D" parent="BeatManager"]
+position = Vector2(-225, 60.621777)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-15, 11, 4)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell195" type="Node2D" parent="BeatManager"]
+position = Vector2(-254, 42.00001)
+script = ExtResource("4_vaoif")
+cubic = Vector3(-16.933332, 10.891538, 6.041795)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Cell71" type="Node2D" parent="BeatManager"]
+position = Vector2(-150, 363.73068)
+script = ExtResource("4_vaoif")
+visibility = 1
+cubic = Vector3(-10, 26, -16)
+metadata/_custom_type_script = "uid://d2rjtdert1f0f"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(799, 448)
+limit_left = 0
+limit_top = 0
+limit_right = 1600
+limit_bottom = 900
+script = ExtResource("3_x8jbu")
+metadata/_edit_lock_ = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="confirm_button" type="Button" parent="UI"]
+offset_left = 912.0
+offset_top = 810.0
+offset_right = 1589.0
+offset_bottom = 882.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 46
+text = "CONFIRM AND EXECUTE TURN"
+
+[node name="swap_button" type="Button" parent="UI"]
+offset_left = 1266.0
+offset_top = 732.0
+offset_right = 1574.0
+offset_bottom = 797.0
+theme_override_font_sizes/font_size = 41
+text = "SWAP FACTION"
+
+[node name="Faction Editing" type="Label" parent="UI"]
+offset_left = 1315.0
+offset_top = 8.0
+offset_right = 1581.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 36
+text = "Faction Editing:"
+
+[node name="Viewing Beat" type="Label" parent="UI"]
+offset_left = 1345.0
+offset_top = 164.0
+offset_right = 1611.0
+offset_bottom = 214.0
+theme_override_font_sizes/font_size = 36
+text = "Viewing Beat:"
+
+[node name="faction_label" type="Label" parent="UI"]
+offset_left = 1438.0
+offset_top = 53.0
+offset_right = 1578.0
+offset_bottom = 130.0
+theme_override_font_sizes/font_size = 56
+text = "BLUE"
+script = ExtResource("4_0dnpp")
+
+[node name="beat_label" type="Label" parent="UI"]
+offset_left = 1538.0
+offset_top = 216.0
+offset_right = 1678.0
+offset_bottom = 293.0
+theme_override_font_sizes/font_size = 56
+text = "1"
+script = ExtResource("4_0dnpp")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -100
+position = Vector2(814, 448)
+scale = Vector2(0.30958334, 0.30958334)
+texture = ExtResource("5_776uk")
+metadata/_edit_lock_ = true
+
+[connection signal="beat_changed" from="BeatManager" to="UI/beat_label" method="_on_beat_manager_beat_changed"]
+[connection signal="faction_changed" from="BeatManager" to="UI/faction_label" method="_on_beat_manager_faction_changed"]
+[connection signal="turn_begin" from="BeatManager" to="Camera2D" method="_reset_camera"]
+[connection signal="turn_begin" from="BeatManager" to="UI/confirm_button" method="hide"]
+[connection signal="turn_begin" from="BeatManager" to="UI/swap_button" method="hide"]
+[connection signal="turn_end" from="BeatManager" to="UI/confirm_button" method="show"]
+[connection signal="turn_end" from="BeatManager" to="UI/swap_button" method="show"]
+[connection signal="pressed" from="UI/confirm_button" to="BeatManager" method="confirm_turn"]
+[connection signal="pressed" from="UI/swap_button" to="BeatManager" method="swap_control_faction"]
