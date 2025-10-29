@@ -21,7 +21,18 @@ var grid : HexGrid:
 				c._align_position()
 
 @export_subgroup("Debug")
-@export var _show_grid : bool = false
+@export var _show_grid : bool = false:
+	set(value):
+		_show_grid = value
+		queue_redraw()
+@export_range(1, 60, 1) var _grid_size : int = 6:
+	set(value):
+		_grid_size = value
+		queue_redraw()
+@export_range(0.0, 1.0, 0.1) var _grid_opacity : float = 1.0:
+	set(value):
+		_grid_opacity = value
+		queue_redraw()
 
 ## Add a [Cell] to the hex grid.
 func add_cell(cell : Cell) -> void:
@@ -68,7 +79,6 @@ func _ready() -> void:
 	
 func _process(_delta : float) -> void:
 	if Engine.is_editor_hint():
-		queue_redraw()
 		if grid and position != grid.origin:
 			grid.origin = position
 
@@ -80,9 +90,10 @@ func _draw_grid_piece(at : Vector2, alpha : float) -> void:
 func _draw() -> void:
 	if Engine.is_editor_hint() and _show_grid:
 		_draw_grid_piece(Vector2.ZERO, 0.8)
-		for r : int in range(1, 6):
+		print("DRAW GRID")
+		for r : int in range(1, _grid_size):
 			for cell : Vector3 in Cubic.get_ring(Vector3.ZERO, r):
-				_draw_grid_piece(Cubic.to_real(cell, grid), 0.05+((5-r)/6.0))
+				_draw_grid_piece(Cubic.to_real(cell, grid), _grid_opacity * (0.05+((_grid_size-1.0-r)/_grid_size)))
 		#draw_circle(Vector2.ZERO, 10, Color(1, 1, 1))
 		
 func _get_configuration_warnings() -> PackedStringArray:

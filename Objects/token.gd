@@ -220,6 +220,7 @@ var facing : float = -Cell.PI_6:
 		if not is_equal_approx(facing, new_facing):
 			#print("new facing: ", new_facing)
 			facing = new_facing
+			queue_redraw()
 
 ## The angle this token was facing at the end of the last turn.
 var last_facing : float = -Cell.PI_6
@@ -505,6 +506,7 @@ func perform_command_to_beat(beat : int) -> void:
 		queue_redraw()
 		await get_tree().create_timer(1.0).timeout
 		debug_draw_vision = false
+		queue_redraw()
 		manager.confirm_beat_complete(cubic)
 	)
 
@@ -737,5 +739,5 @@ func _process(_delta : float) -> void:
 		#calculate_view_cones()
 		#generate_vision(0)
 		pass
-	queue_redraw()
+	#queue_redraw()
 	

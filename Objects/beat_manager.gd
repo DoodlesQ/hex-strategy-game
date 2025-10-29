@@ -281,5 +281,5 @@ func _process(_delta : float) -> void:
 						selected.queue_redraw()
 				_:
 					confirm_command()
-			
-	queue_redraw()
+	if not Engine.is_editor_hint():
+		queue_redraw()

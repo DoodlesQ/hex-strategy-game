@@ -54,7 +54,7 @@ class Aim:
 			elif token.alert:
 				token.alert = false
 			callback.call()
-		, 1.0)
+		, 0.0)
 
 class Aim_Target:
 	extends Aim
