@@ -3,7 +3,12 @@
 extends HexManager
 class_name BeatManager
 
-var beat_editing : int = 0
+signal beat_changed(beat : int)
+var beat_editing : int = 0:
+	set(value):
+		beat_editing = value
+		beat_changed.emit(value if tool == Tool.COMMAND else value - 1)
+
 var beat_perform : int = -1
 
 var can_edit : bool = true
@@ -116,10 +121,7 @@ func _input(event : InputEvent) -> void:
 				beat_editing -= 1
 		
 		if event.is_action("change_faction"):
-			if control_faction == Token.Faction.ONE:
-				control_faction = Token.Faction.TWO
-			else:
-				control_faction = Token.Faction.ONE
+			swap_control_faction()
 		
 		if tool == Tool.COMMAND:
 			if event.is_action("beat_cycle_up"):
@@ -127,12 +129,22 @@ func _input(event : InputEvent) -> void:
 			if event.is_action("beat_cycle_down"):
 				beat_editing -= 1 if beat_editing > 0 else -3
 
+signal faction_changed(faction : String)
+func swap_control_faction() -> void:
+	if control_faction == Token.Faction.ONE:
+		control_faction = Token.Faction.TWO
+		faction_changed.emit("PINK")
+	else:
+		control_faction = Token.Faction.ONE
+		faction_changed.emit("BLUE")
+
 func remove_token(token : Token) -> void:
 	assert(token in tokens, "Cannot remove token %s, not in token list." % token)
 	tokens.erase(token)
 	confirm_beat_complete(token.cubic)
 	remove_cell_at(token.cubic)
 
+signal turn_begin()
 func confirm_turn() -> void:
 	var invalid_tokens : Array[Token] = validate_tokens()
 	if invalid_tokens.size() == 0:
@@ -141,11 +153,15 @@ func confirm_turn() -> void:
 		
 		beat_step = 0
 		beat_perform = 0
+		beat_changed.emit(beat_perform)
+		faction_changed.emit("")
 		for token : Token in tokens:
 			token.action = Token.Action.NONE
 			token.facing = token.last_facing
+		turn_begin.emit()
 		perform_beat_step()
 
+signal turn_end()
 func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 	print("CONFIRMATION ", (str(id) if id.is_finite() else ""))
 	beat_confirmed += 1
@@ -158,12 +174,15 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 		elif beat_step == 1:
 			beat_step = 0
 			beat_perform += 1
+			beat_changed.emit(beat_perform)
 		if beat_perform >= 4:
 			print("TURN COMPLETED")
 			for token : Token in tokens:
 				token.reset()
 			queue_redraw()
 			can_edit = true
+			turn_end.emit()
+			faction_changed.emit("BLUE" if control_faction == Token.Faction.ONE else "PINK")
 		else: perform_beat_step()
 
 signal perform_beat(beat : int)
