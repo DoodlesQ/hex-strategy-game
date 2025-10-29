@@ -119,6 +119,7 @@ func _input(event : InputEvent) -> void:
 			elif tool == Tool.MOVE:
 				tool = Tool.COMMAND
 				beat_editing -= 1
+				if beat_editing < 0: beat_editing = 0
 		
 		if event.is_action("change_faction"):
 			swap_control_faction()
@@ -181,6 +182,7 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 				token.reset()
 			queue_redraw()
 			can_edit = true
+			beat_editing = 0
 			turn_end.emit()
 			faction_changed.emit("BLUE" if control_faction == Token.Faction.ONE else "PINK")
 		else: perform_beat_step()

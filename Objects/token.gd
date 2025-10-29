@@ -473,7 +473,7 @@ var health : float
 func backsolve_command(beat : int) -> Command:
 	var c : Command = beats[beat].command
 	while c.type == Command.Type.UNDEFINED:
-		if beat == 0:
+		if beat <= 0:
 			c = Command.Watch.new()
 			break
 		c = beats[beat - 1].command
