@@ -210,6 +210,7 @@ var focused : bool = true
 var look_smooth : bool = false
 
 ## The angle that this token is currently facing.
+@export_range(-PI, PI, 0.01)
 var facing : float = -Cell.PI_6:
 	set(value):
 		var new_facing : float = wrapf(value, -PI, PI)
@@ -531,9 +532,11 @@ func act_on_enemy(beat : int, target : Vector3) -> void:
 		target_tile = target + cubic
 		moment_accuracy *= periphery_penalty
 	if enemy.visibility == 1: moment_accuracy *= partial_penalty
-	var shot : float = randf() - enemy.token.evasion
+	var shot : float = randf()
+	var dodge : float = randf()
 	var location : Vector3 = backsolve(beat)
-	if shot < moment_accuracy and shot > 0.0:
+	if (shot < moment_accuracy and dodge > enemy.token.evasion) or \
+			dodge < -enemy.token.evasion:
 		enemy.token.deal_damage(damage, location)
 	else:
 		enemy.token.deal_damage(damage * miss_penalty, location)
@@ -614,10 +617,10 @@ func _draw() -> void:
 	
 	var hp_circle : Array[Vector2] = [Vector2.ZERO]
 	var t : float = 0
-	while t <= TAU * health / max_health:
-		t += 0.1
-		hp_circle.append(Vector2.from_angle(t - Cell.PI_6 - (PI / 2)) * manager.grid.inner_radius * 0.5)
-	draw_colored_polygon(hp_circle, Color(1,0,0,0.5))
+	while t >= -TAU * health / max_health:
+		t -= 0.1
+		hp_circle.append(Vector2.from_angle(t - (PI * 0.5)) * manager.grid.inner_radius * 0.5)
+	draw_colored_polygon(hp_circle, Color(1,1,1,0.5))
 	
 	super._draw()
 

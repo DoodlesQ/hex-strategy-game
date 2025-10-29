@@ -37,6 +37,7 @@ faction = 2
 move_length = 2
 focus_distance = 10
 periphery = 1.0471975511965976
+facing = -3.141592653589793
 visibility = 1
 cubic = Vector3(2, -2, 0)
 metadata/_custom_type_script = "uid://b0gpnolicy1rx"

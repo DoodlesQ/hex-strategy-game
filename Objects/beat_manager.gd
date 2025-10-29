@@ -215,6 +215,7 @@ func _draw() -> void:
 		if tool == Tool.COMMAND:
 			for token : Token in tokens:
 				if token.faction == control_faction:
+					Token.draw_path(self, token, token.position, 0.125)
 					for i : int in range(4):
 						var b : Vector3 = token.backsolve(i)
 						var a : float = 0.2 if i != beat_editing else 0.5
@@ -230,9 +231,9 @@ func _draw() -> void:
 								draw_cone = true
 								dir = Cubic.get_angle(com.target - b)
 						if draw_cone:
-							Token.draw_vision_cone(self, token, dir, Cubic.to_real(b, grid), 0.25)
+							Token.draw_vision_cone(self, token, dir, Cubic.to_real(b, grid), a * 0.5)
 						elif com.type == Command.Type.WATCH:
-							Token.draw_periphery(self, token, Cubic.to_real(b, grid), 0.25)
+							Token.draw_periphery(self, token, Cubic.to_real(b, grid), a * 0.5)
 						
 
 		var c : float = 1.0 if tool == Tool.COMMAND else 0.0
