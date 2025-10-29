@@ -32,6 +32,10 @@ enum Faction{ NONE, ONE, TWO }
 ## The last beat that had a movement set for it.
 var last_move_set : int = -1
 
+## The number of real moves this token has been assigned, not counting
+## stationary movement.
+var total_moves_set : int = 0
+
 ## Whether the current movement sequence is valid or not.
 ## i.e. whether this token will intersect with other ally tokens.
 var valid : bool = true
@@ -93,7 +97,7 @@ func validate() -> bool:
 ## position.
 func get_all_moves() -> Array[Vector3]:
 	var moves : Array[Vector3] = []
-	if last_move_set == 3: return moves
+	if last_move_set == 3 or total_moves_set >= move_limit: return moves
 	var move_from : Vector3 = cubic
 	if last_move_set != -1: move_from = beats[last_move_set].move
 	if check_move_valid(Vector3.ZERO, 1, move_from, last_move_set + 1):
@@ -108,10 +112,14 @@ func get_all_moves() -> Array[Vector3]:
 func set_move(beat : int, location : Vector3) -> void:
 	beats[beat].move = location
 	last_move_set = beat
+	if not location.is_equal_approx(backsolve(beat - 1)):
+		total_moves_set += 1
 
 ## Remove this token's last defined position.
 func pop_move() -> Vector3:
 	var last_move : Vector3 = beats[last_move_set].move
+	if not last_move.is_equal_approx(backsolve(last_move_set - 1)):
+		total_moves_set -= 1
 	beats[last_move_set].move = BLANK_BEAT.move
 	last_move_set -= 1
 	return last_move
