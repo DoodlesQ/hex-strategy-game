@@ -130,6 +130,9 @@ func tween_to_move(beat : int, callback : Callable) -> void:
 	var move : Vector3 = backsolve(beat)
 	var tween : Tween = self.create_tween()
 	var final_position : Vector2 = Cubic.to_real(move, manager.grid)
+	var scaling : float = 1.5
+	if move.is_equal_approx(backsolve(beat - 1)):
+		scaling = 1.0
 	#var move_vector : Vector2 = final_position - position
 	#var length : float = 0.2 + Cubic.distance(cubic, move) * 0.4
 	#facing = position.angle_to_point(final_position)
@@ -151,7 +154,7 @@ func tween_to_move(beat : int, callback : Callable) -> void:
 	tween.tween_interval(randf() * 0.5)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_property(self, "scale", Vector2(1.5, 1.5), 1.0)
+	tween.tween_property(self, "scale", scaling * Vector2.ONE, 1.0)
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
 	tween.parallel().tween_property(self, "position", final_position, 1.2)
