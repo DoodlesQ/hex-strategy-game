@@ -616,7 +616,7 @@ func _draw() -> void:
 				Color(1.0, 1.0, 1.0, 0.5)
 			)
 		if action == Action.AIMING:
-			draw_vision(Cubic.to_real(beats[manager.beat_editing].move, manager.grid) - position)
+			draw_vision(Cubic.to_real(backsolve(manager.beat_editing), manager.grid) - position)
 	
 	if focused:
 		draw_line(

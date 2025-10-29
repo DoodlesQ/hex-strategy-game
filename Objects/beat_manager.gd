@@ -242,6 +242,7 @@ func _draw() -> void:
 			for token : Token in tokens:
 				if token.faction == control_faction:
 					Token.draw_path(self, token, token.position, 0.125)
+					#token.debug_draw_vision = true
 					for i : int in range(4):
 						var b : Vector3 = token.backsolve(i)
 						var a : float = 0.2 if i != beat_editing else 0.5
