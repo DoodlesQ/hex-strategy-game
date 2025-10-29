@@ -131,18 +131,13 @@ func tween_to_move(beat : int, callback : Callable) -> void:
 	print(next_command.type)
 	match next_command.type:
 		Command.Type.AIM:
-			print("AIM: ", next_command.direction)
 			face_towards = next_command.direction
 		Command.Type.AIM_TARGET:
-			print("AIM_T: ", next_command.target)
 			face_towards = Cubic.get_angle(next_command.target - move)
-		_:
-			print("NONE: ", final_position)
+		_ when not final_position.is_equal_approx(position):
 			face_towards = position.angle_to_point(final_position) - Cell.PI_6
 	if alert and target_tile.is_finite():
-		print("ALERT!")
 		if Command.is_overwritable(next_command.type):
-			print("NEW: ", target_tile)
 			face_towards = Cubic.get_angle(target_tile - move)
 	print(face_towards)
 	tween.tween_interval(randf() * 0.5)
@@ -152,7 +147,7 @@ func tween_to_move(beat : int, callback : Callable) -> void:
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
 	tween.parallel().tween_property(self, "position", final_position, 1.2)
-	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.set_trans(Tween.TRANS_CUBIC)
 	tween.parallel().tween_property(self, "facing", Command.Aim.get_rotate_to(facing, face_towards), 1.2)
 	tween.tween_property(self, "facing", face_towards, 0)
 	tween.set_ease(Tween.EASE_OUT)
