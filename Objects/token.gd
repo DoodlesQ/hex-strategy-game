@@ -20,6 +20,7 @@ enum Faction{ NONE, ONE, TWO }
 
 
 func _update_position(old : Vector3, new : Vector3) -> void:
+	print("Updating token @ %s to " % old, new)
 	manager.update_cell_position(old, new, manager.token_hash)
 
 # _____ MOVEMENT _____
@@ -61,7 +62,7 @@ func check_move_valid(
 	for d : int in range(distance):
 		var space = direction * (d + 1) + move_from
 		var terrain : Terrain = manager.get_terrain_at(space)
-		if terrain.is_solid: return false
+		if terrain and terrain.is_solid: return false
 		for test : Token in manager.get_tokens():
 			if test == self: continue
 			var test_is_at : Vector3 = test.backsolve(beat)
@@ -258,7 +259,7 @@ func is_zero_or_greater_approx(value : float) -> bool:
 ## Calculates the list of tries for this token's focus and periphery cones
 func calculate_view_cones() -> void:	
 	_focus_cone = _calculate_view_cone(_tries_focus, focus_angle)
-	_periphery_cone = _calculate_view_cone(_tries_focus, focus_angle + periphery)
+	_periphery_cone = _calculate_view_cone(_tries_focus, focus_angle + periphery, focus_angle)
 
 ## Returns a generated list of tries to the points along a circle of radius
 ## [param view_distance].
@@ -283,7 +284,7 @@ func _pregenerate_tries(view_distance : float) -> Array[Array]:
 
 ## Returns a sublist of tries, trimmed to only include ones angled up to
 ## [param view_angle] away from the angle [member facing].
-func _calculate_view_cone(tries : Array[Array], view_angle : float) -> Array[Array]:
+func _calculate_view_cone(tries : Array[Array], view_angle : float, exclude_angle : float = INF) -> Array[Array]:
 	view_angle += 0.005
 	var view_cone : Array[Array] = []
 	# For each trie,
@@ -297,12 +298,11 @@ func _calculate_view_cone(tries : Array[Array], view_angle : float) -> Array[Arr
 			continue
 		if is_zero_or_greater_approx(difference - view_angle):
 			continue
+		if is_finite(exclude_angle):
+			if difference < exclude_angle or difference > -exclude_angle:
+				#continue
+				pass
 			
-		#if is_equal_approx(Cell.PI_6, abs(fmod(theta, Cell.PI_3))):
-			#if not is_equal_approx(theta, facing):
-				#var offset : Vector3 = Cubic.from_angle(facing + Cell.PI_3 * sign(difference), 0.1)
-				#t = Cubic.get_line(offset, t[-1] + offset)
-		
 		# Remove origin from trie, to prevent self-detection later
 		while t[0].is_zero_approx(): t.pop_front()
 		

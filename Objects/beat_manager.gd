@@ -39,15 +39,15 @@ func get_tokens() -> Array: return token_hash.values()
 func get_token_at(location : Vector3) -> Token:
 	return get_cell_at(location, token_hash) as Token
 
-func remove_token(location : Vector3) -> void:
+func remove_token(token : Token) -> void:
+	remove_token_at(token.cubic)
+
+func remove_token_at(location : Vector3) -> void:
 	remove_cell_at(location, token_hash)
 	confirm_beat_complete(location)
-	
+
 func get_terrain_at(location : Vector3) -> Terrain:
 	return get_cell_at(location) as Terrain
-	
-func _ready() -> void:
-	for token : Token in get_tokens(): add_token(token)
 
 func set_selected(location : Vector3) -> void:
 	if selected:
@@ -189,10 +189,15 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 			while len(wings) > 0:
 				for token : Token in wings:
 					var destination : Vector3 = token.backsolve(3)
-					if destination == token.cubic:
+					print("Moving token @ %s to " % token.cubic, destination)
+					if destination.is_equal_approx(token.cubic):
+						print("Already there. No need.")
 						wings.erase(token)
 						token.reset()
-					if get_cell_at(destination): continue
+						continue
+					if get_token_at(destination):
+						print("...Blocked...")
+						continue
 					else:
 						token.cubic = destination
 						wings.erase(token)
@@ -202,6 +207,7 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 			beat_editing = 0
 			turn_end.emit()
 			faction_changed.emit("BLUE" if control_faction == Token.Faction.ONE else "PINK")
+			print("NEXT TURN")
 		else: perform_beat_step()
 
 signal perform_beat(beat : int)
@@ -237,6 +243,7 @@ func confirm_command() -> void:
 	selected.facing = selected.last_facing
 	selected.target_tile = Vector3.INF
 	selected.beats[beat_editing].command = c
+	selected.focused = false
 	#print("COMMANDSET: ", selected.beats[beat_editing].command.direction)
 	set_selected(Vector3.INF)
 	do_command = false
@@ -297,6 +304,7 @@ func _process(_delta : float) -> void:
 		if do_command:
 			match command:
 				Command.Type.AIM, Command.Type.AIM_TARGET:
+					if not selected.focused: selected.focused = true
 					var aim_from : Vector3 = selected.backsolve(beat_editing)
 					var target_tile : Vector3 = Cubic.snapped(get_mouse_cubic())
 					if target_tile != aim_from:

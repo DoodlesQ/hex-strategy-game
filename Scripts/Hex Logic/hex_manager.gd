@@ -49,26 +49,26 @@ func get_cell_at(location : Vector3, list : Dictionary = cell_hash) -> Cell:
 
 func remove_cell_at(location : Vector3, list : Dictionary = cell_hash) -> void:
 	var index : Vector3 = Cubic.snapped(location)
-	assert(index in list, "Cannot remove cell %s, does not exist" % index)
+	assert(index in list.keys(), "Cannot remove cell %s, does not exist" % index)
 	var cell : Cell = get_cell_at(index)
 	list.erase(index)
 	cell.queue_free()
 
 func _add_cell_at(location : Vector3, cell : Cell, list : Dictionary = cell_hash) -> void:
 	var index : Vector3 = Cubic.snapped(location)
-	assert(index not in list, "Cannot add cell %s, already exists" % index)
+	assert(index not in list.keys(), "Cannot add cell %s, already exists" % index)
 	list[index] = cell
 	
 ## Update the recorded position of a [Cell] in the hashmap.
 ## This should be run every time a cell's cubic position changes, to ensure
 ## the manager is able to find it at that new location.
 func update_cell_position(location : Vector3, new_location : Vector3, list : Dictionary = cell_hash) -> void:
-	var index = Cubic.snapped(location, 0.5)
-	var new_index = Cubic.snapped(new_location, 0.5)
+	var index = Cubic.snapped(location)
+	var new_index = Cubic.snapped(new_location)
 	if index.is_equal_approx(new_index): return
 	assert(new_index not in list, \
 		"Cell @ %s moved to an invalid location: %s, already occupied." % [index, new_index])
-	var cell = get_cell_at(index)
+	var cell : Cell = list[index]
 	list.erase(index)
 	list[new_index] = cell
 	
