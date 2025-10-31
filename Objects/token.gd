@@ -198,6 +198,8 @@ var _tries_radial : Array[Array] = []
 
 var _tries_focus : Array[Array] = []
 
+var _tries_extra : Array[Array] = []
+
 var _focus_cone : Array[Array] = []
 
 var _periphery_cone : Array[Array] = []
@@ -312,9 +314,12 @@ func generate_vision(beat : int, private : bool = true) -> void:
 	partial_visible_tiles = []
 	periphery_tiles = []
 	enemy_tiles = {}
-	for trie : Array[Vector3] in _tries_radial:
-		_line_of_sight(beat, center, trie, false, private)
-	if focused:
+	if not focused:
+		for trie : Array[Vector3] in _tries_radial:
+			_line_of_sight(beat, center, trie, false, private)
+	else:
+		for trie : Array[Vector3] in _tries_extra:
+			_line_of_sight(beat, center, trie, false, private)
 		for trie : Array[Vector3] in _focus_cone:
 			_line_of_sight(beat, center, trie, true, private)
 		for trie : Array[Vector3] in _periphery_cone:
@@ -585,6 +590,7 @@ func reset() -> void:
 	alert = false
 	target_tile = Vector3.INF
 	last_move_set = -1
+	total_moves_set = 0
 	last_facing = facing
 	queue_redraw()
 	
@@ -595,6 +601,7 @@ func _ready() -> void:
 	super._ready()
 	_tries_radial = _pregenerate_tries(radial_distance)
 	_tries_focus = _pregenerate_tries(focus_distance)
+	_tries_extra = _pregenerate_tries(radial_distance * 0.5)
 	health = max_health
 	last_facing = facing
 

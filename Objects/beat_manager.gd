@@ -38,7 +38,7 @@ func set_selected(location : Vector3) -> void:
 	if selected:
 		selected.selected = false
 		selected.action = Token.Action.NONE
-	var token : Token = get_cell_at(location)
+	var token : Token = (get_cell_at(location) as Token)
 	if token and token.faction == control_faction:
 		selected = token
 		token.selected = true
@@ -169,8 +169,6 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 	print(beat_confirmed, " vs ", beat_confirm_sum)
 	if beat_confirmed == beat_confirm_sum:
 		if beat_step == 0:
-			for token : Token in tokens:
-				token.cubic = token.backsolve(beat_perform)
 			beat_step += 1
 		elif beat_step == 1:
 			beat_step = 0
@@ -178,8 +176,15 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 			beat_changed.emit(beat_perform)
 		if beat_perform >= 4:
 			print("TURN COMPLETED")
-			for token : Token in tokens:
-				token.reset()
+			var wings : Array[Token] = tokens.duplicate()
+			while len(wings) > 0:
+				for token : Token in wings:
+					var destination : Vector3 = token.backsolve(3)
+					if get_cell_at(destination): continue
+					else:
+						token.cubic = destination
+						wings.erase(token)
+						token.reset()
 			queue_redraw()
 			can_edit = true
 			beat_editing = 0
