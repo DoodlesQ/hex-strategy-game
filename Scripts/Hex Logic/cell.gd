@@ -18,14 +18,14 @@ const PI_3 : float = PI / 3
 ## The [HexManager] of this cell.
 var manager : HexManager
 
-## Traits that a cell can have.
+## The different levels of visibility a cell can have.
 enum Visibility {
-	TRANSPARENT = 0,
-	PARTIAL = 1,
-	SOLID = 2,
+	TRANSPARENT = 0, ## Completely see-through. Does not block sight.
+	PARTIAL = 1, ## Partially see-through, only blocks sight after some depth.
+	SOLID = 2, ## Completely opaque. Always blocks sight.
 }
 
-## This cells [enum Traits] as a bitflag.
+## How well this cell can be seen through by [class Token]s.
 @export var visibility : Visibility = Visibility.SOLID
 
 #static func _trait_flags() -> String:
