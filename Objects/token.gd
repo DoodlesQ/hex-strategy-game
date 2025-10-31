@@ -599,6 +599,8 @@ func reset() -> void:
 
 func _ready() -> void:
 	super._ready()
+	assert(manager is BeatManager, "Token is not a child of a BeatManager")
+	manager = manager as BeatManager
 	_tries_radial = _pregenerate_tries(radial_distance)
 	_tries_focus = _pregenerate_tries(focus_distance)
 	_tries_extra = _pregenerate_tries(radial_distance * 0.5)
