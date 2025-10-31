@@ -182,17 +182,20 @@ func get_move_list() -> Array[Vector3]:
 
 ## The short-range view distance of this token.
 ## Used in most cases.
-@export_range(1, 25, 1, "or_greater", "suffix:tiles") var radial_distance : int = 4
+@export_range(1, 25, 1, "or_greater", "suffix:tiles") var radial_range : int = 4
 
 ## The long-range "focused" view distance of this token.
 ## Used when aiming.
-@export_range(1, 25, 1, "or_greater", "suffix:tiles") var focus_distance : int = 8
+@export_range(1, 25, 1, "or_greater", "suffix:tiles") var focus_range : int = 8
 
 ## The angle of this token's field of view when focused.
 @export_range(0, 90, 15, "radians_as_degrees") var focus_angle : float = PI / 6
 
 ## The angle of this token's field of periphery when focused.
 @export_range(0, 90, 15, "radians_as_degrees") var periphery : float = PI / 2
+
+## How far into partially visible tiles this token can see.
+@export_range(0, 100, 1, "suffix:tiles") var partial_view_depth : int = 1
 
 var _tries_radial : Array[Array] = []
 
@@ -305,8 +308,8 @@ func _calculate_view_cone(tries : Array[Array], view_angle : float) -> Array[Arr
 
 ## Runs line-of-sight calculations on all tries currently active. Stores the
 ## results in [member visible_tiles] and [member partial_visible_tiles].
-## Uses [member radial_distance] if [member focused] is [code]false[/code],
-## and uses [member focus_distance] limited by [member focus angle] and
+## Uses [member radial_range] if [member focused] is [code]false[/code],
+## and uses [member focus_range] limited by [member focus angle] and
 ## [member periphery] if [member focused] is [code]true[/code].
 func generate_vision(beat : int, private : bool = true) -> void:
 	var center : Vector3 = backsolve(beat)
@@ -333,6 +336,7 @@ func _line_of_sight(
 		private : bool
 	) -> void:
 	var partial : bool = !focus
+	var partial_count : int = 0
 	# Check every tile along trie
 	for point : Vector3 in trie:
 		# If tile is the center, skip it.
@@ -401,8 +405,11 @@ func _line_of_sight(
 				match other.visibility:
 					Cell.Visibility.SOLID: break
 					Cell.Visibility.PARTIAL:
-						if partial: break
-						else: partial = true
+						if partial and partial_count >= partial_view_depth:
+							break
+						else:
+							partial = true
+							partial_count += 1
 		# If we got this far, we can see this tile somehow. Add it to the
 		#  appropriate list.
 		if not focus: periphery_tiles.append(point)
@@ -601,9 +608,9 @@ func _ready() -> void:
 	super._ready()
 	assert(manager is BeatManager, "Token is not a child of a BeatManager")
 	manager = manager as BeatManager
-	_tries_radial = _pregenerate_tries(radial_distance)
-	_tries_focus = _pregenerate_tries(focus_distance)
-	_tries_extra = _pregenerate_tries(radial_distance * 0.5)
+	_tries_radial = _pregenerate_tries(radial_range)
+	_tries_focus = _pregenerate_tries(focus_range)
+	_tries_extra = _pregenerate_tries(radial_range * 0.5)
 	health = max_health
 	last_facing = facing
 
@@ -699,7 +706,7 @@ static func draw_vision_cone(
 		alpha : float = 0.5
 	) -> void:
 		angle += Cell.PI_6
-		var radius : float = token.focus_distance * token.manager.grid.inner_radius * HexGrid.SQRT_3
+		var radius : float = token.focus_range * token.manager.grid.inner_radius * HexGrid.SQRT_3
 		var a1 : float = angle - token.focus_angle
 		var a2 : float = angle + token.focus_angle
 		var v : Vector2 = origin + Vector2.from_angle(a1) * radius
@@ -715,7 +722,7 @@ static func draw_periphery(
 		origin : Vector2 = Vector2.ZERO,
 		alpha : float = 0.5
 	) -> void:
-		var radius : float = token.radial_distance * token.manager.grid.inner_radius * HexGrid.SQRT_3
+		var radius : float = token.radial_range * token.manager.grid.inner_radius * HexGrid.SQRT_3
 		var color : Color = Color(1,1,1,alpha)
 		canvas.draw_circle(origin, radius, color, false, 2)
 
