@@ -59,12 +59,15 @@ var cubic : Vector3:
 	set(value):
 		assert(Cubic.is_valid(value), "Cubic coordinates must be valid")
 		if not value.is_equal_approx(cubic):
-			if manager: manager.update_cell_position(cubic, value)
+			if manager: _update_position(cubic, value)
 		cubic = value
 		if manager: _align_position()
 
 @export_tool_button("Snap to Grid", "Snap") var tool_stg : Callable = snap_position
 
+
+func _update_position(old : Vector3, new : Vector3) -> void:
+	manager.update_cell_position(old, new)
 
 func _align_position() -> void:
 	position = Cubic.to_real(cubic, manager.grid)
@@ -129,7 +132,7 @@ func _enter_tree() -> void:
 		update_configuration_warnings()
 		manager = get_parent() as HexManager
 		queue_redraw()
-	
+
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		if not manager:

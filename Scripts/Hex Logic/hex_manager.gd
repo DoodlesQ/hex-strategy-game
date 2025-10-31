@@ -35,40 +35,42 @@ var grid : HexGrid:
 		queue_redraw()
 
 ## Add a [Cell] to the hex grid.
-func add_cell(cell : Cell) -> void:
-	var location = Cubic.snapped(cell.cubic)
-	assert(location not in cell_hash, "Cannot add cell %s, already exists" % location)
-	cell_hash[location] = cell
+func add_cell(cell : Cell, list : Dictionary = cell_hash) -> void:
+	_add_cell_at(cell.cubic, cell, list)
 	
 ## Get a list of every [Cell] in the grid.
 func get_cells() -> Array: return cell_hash.values()
 	
 ## Find a [Cell] in the hex grid at [param location].
 ## Returns [code]<null>[/code] if no Cell is found.
-func get_cell_at(location : Vector3) -> Cell:
-	var snap = Cubic.snapped(location, 0.5)
-	if snap in cell_hash: return cell_hash[snap]
-	return
+func get_cell_at(location : Vector3, list : Dictionary = cell_hash) -> Cell:
+	var index : Vector3 = Cubic.snapped(location)
+	return list[index] if index in list else null
 
-func remove_cell_at(location : Vector3) -> void:
-	assert(location in cell_hash, "Cannot remove cell %s, does not exist" % location)
-	var cell : Cell = get_cell_at(location)
-	cell_hash.erase(location)
+func remove_cell_at(location : Vector3, list : Dictionary = cell_hash) -> void:
+	var index : Vector3 = Cubic.snapped(location)
+	assert(index in list, "Cannot remove cell %s, does not exist" % index)
+	var cell : Cell = get_cell_at(index)
+	list.erase(index)
 	cell.queue_free()
-	
+
+func _add_cell_at(location : Vector3, cell : Cell, list : Dictionary = cell_hash) -> void:
+	var index : Vector3 = Cubic.snapped(location)
+	assert(index not in list, "Cannot add cell %s, already exists" % index)
+	list[index] = cell
 	
 ## Update the recorded position of a [Cell] in the hashmap.
 ## This should be run every time a cell's cubic position changes, to ensure
 ## the manager is able to find it at that new location.
-func update_cell_position(location : Vector3, new_location : Vector3) -> void:
-	var snap = Cubic.snapped(location, 0.5)
-	var new_snap = Cubic.snapped(new_location, 0.5)
-	if snap.is_equal_approx(new_snap): return
-	assert(new_snap not in cell_hash, \
-		"Cell @ %s moved to an invalid location: %s, already occupied." % [snap, new_snap])
-	var temp = get_cell_at(snap)
-	cell_hash.erase(snap)
-	cell_hash[new_snap] = temp
+func update_cell_position(location : Vector3, new_location : Vector3, list : Dictionary = cell_hash) -> void:
+	var index = Cubic.snapped(location, 0.5)
+	var new_index = Cubic.snapped(new_location, 0.5)
+	if index.is_equal_approx(new_index): return
+	assert(new_index not in list, \
+		"Cell @ %s moved to an invalid location: %s, already occupied." % [index, new_index])
+	var cell = get_cell_at(index)
+	list.erase(index)
+	list[new_index] = cell
 	
 ## Returns the mouse's current cubic coordinates.
 func get_mouse_cubic() -> Vector3:

@@ -20,7 +20,7 @@ var beat_step : int = 0
 var selected : Token = null
 var selected_moves : Array[Vector3] = []
 
-var tokens : Array[Token] = []
+var token_hash : Dictionary
 
 enum Tool {MOVE, COMMAND}
 
@@ -30,15 +30,30 @@ var command : Command.Type
 
 var control_faction : Token.Faction = Token.Faction.ONE
 
+
+func add_token(token : Token) -> void:
+	add_cell(token, token_hash)
+
+func get_tokens() -> Array: return token_hash.values()
+
+func get_token_at(location : Vector3) -> Token:
+	return get_cell_at(location, token_hash) as Token
+
+func remove_token(location : Vector3) -> void:
+	remove_cell_at(location, token_hash)
+	confirm_beat_complete(location)
+	
+func get_terrain_at(location : Vector3) -> Terrain:
+	return get_cell_at(location) as Terrain
+	
 func _ready() -> void:
-	for cell in get_cells():
-		if cell as Token: tokens.append(cell)
+	for token : Token in get_tokens(): add_token(token)
 
 func set_selected(location : Vector3) -> void:
 	if selected:
 		selected.selected = false
 		selected.action = Token.Action.NONE
-	var token : Token = (get_cell_at(location) as Token)
+	var token : Token = get_token_at(location)
 	if token and token.faction == control_faction:
 		selected = token
 		token.selected = true
@@ -75,7 +90,7 @@ func _input(event : InputEvent) -> void:
 				if selected and do_command:
 					confirm_command()
 				else:
-					for token : Token in tokens:
+					for token : Token in get_tokens():
 						if token.faction != control_faction: continue
 						var at : Vector3 = token.backsolve(beat_editing)
 						if not selected and mouse.is_equal_approx(at):
@@ -139,12 +154,6 @@ func swap_control_faction() -> void:
 		control_faction = Token.Faction.ONE
 		faction_changed.emit("BLUE")
 
-func remove_token(token : Token) -> void:
-	assert(token in tokens, "Cannot remove token %s, not in token list." % token)
-	tokens.erase(token)
-	confirm_beat_complete(token.cubic)
-	remove_cell_at(token.cubic)
-
 signal turn_begin()
 func confirm_turn() -> void:
 	var invalid_tokens : Array[Token] = validate_tokens()
@@ -156,7 +165,7 @@ func confirm_turn() -> void:
 		beat_perform = 0
 		beat_changed.emit(beat_perform)
 		faction_changed.emit("")
-		for token : Token in tokens:
+		for token : Token in get_tokens():
 			token.action = Token.Action.NONE
 			token.facing = token.last_facing
 		turn_begin.emit()
@@ -176,10 +185,13 @@ func confirm_beat_complete(id : Vector3 = Vector3.INF) -> void:
 			beat_changed.emit(beat_perform)
 		if beat_perform >= 4:
 			print("TURN COMPLETED")
-			var wings : Array[Token] = tokens.duplicate()
+			var wings : Array = get_tokens()
 			while len(wings) > 0:
 				for token : Token in wings:
 					var destination : Vector3 = token.backsolve(3)
+					if destination == token.cubic:
+						wings.erase(token)
+						token.reset()
 					if get_cell_at(destination): continue
 					else:
 						token.cubic = destination
@@ -197,7 +209,7 @@ func perform_beat_step() -> void:
 	print("PERFORM BEAT ", beat_perform, " STEP ", beat_step)
 	beat_confirmed = 0
 	beat_confirm_sum = 0
-	for token : Token in tokens:
+	for token : Token in get_tokens():
 		if beat_step == 0:
 			token.perform_move_to_beat(beat_perform)
 		else:
@@ -207,7 +219,7 @@ func perform_beat_step() -> void:
 
 func validate_tokens() -> Array[Token]:
 	var invalid : Array[Token] = []
-	for token : Token in tokens:
+	for token : Token in get_tokens():
 		if not token.validate(): invalid.append(token)
 	return invalid
 
@@ -241,12 +253,12 @@ func _draw() -> void:
 						grid.inner_radius, 
 						Color(1.0, 1.0, 1.0, 0.5)
 					)
-			for token : Token in tokens:
+			for token : Token in get_tokens():
 				if token.faction == control_faction:
 					Token.draw_path(self, token, token.position, 0.25)
 		
 		if tool == Tool.COMMAND:
-			for token : Token in tokens:
+			for token : Token in get_tokens():
 				if token.faction == control_faction:
 					Token.draw_path(self, token, token.position, 0.125)
 					#token.debug_draw_vision = true

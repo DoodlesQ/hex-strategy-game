@@ -19,6 +19,9 @@ enum Faction{ NONE, ONE, TWO }
 @export var faction : Faction = Faction.NONE
 
 
+func _update_position(old : Vector3, new : Vector3) -> void:
+	manager.update_cell_position(old, new, manager.token_hash)
+
 # _____ MOVEMENT _____
 
 @export_group("Movement")
@@ -57,9 +60,9 @@ func check_move_valid(
 	if distance > move_length: return false
 	for d : int in range(distance):
 		var space = direction * (d + 1) + move_from
-		var other : Cell = manager.get_cell_at(space)
-		if other and not other is Token: return false
-		for test : Token in manager.tokens:
+		var terrain : Terrain = manager.get_terrain_at(space)
+		if terrain.is_solid: return false
+		for test : Token in manager.get_tokens():
 			if test == self: continue
 			var test_is_at : Vector3 = test.backsolve(beat)
 			if test_is_at.is_equal_approx(space): return false
@@ -84,7 +87,7 @@ func backsolve(beat : int) -> Vector3:
 func validate() -> bool:
 	for beat : int in range(4):
 		var current : Vector3 = backsolve(beat)
-		for token : Token in manager.tokens:
+		for token : Token in manager.get_tokens():
 			if token == self: continue
 			var other : Vector3 = token.backsolve(beat)
 			if other.is_equal_approx(current):
@@ -359,57 +362,57 @@ func _line_of_sight(
 		#  so remove it from that list.
 		if not partial and point in partial_visible_tiles:
 			partial_visible_tiles.erase(point)
-		# Ask the manager if there are any cells at this tile.
-		var other : Cell = manager.get_cell_at(point + center)
-		if not other:
-			# If there aren't, check all the token positions at this beat,
-			#  and if there's a token at this tile *during* this beat, then
-			#  actually there should be a cell here.
-			for t : Token in manager.tokens:
-				if t == self: continue
-				if private and t.faction != faction: continue
-				if point == t.backsolve(beat) - center:
-					#print(t.backsolve(beat), t.cubic)
-					other = t
-		# If we found a cell (or backsolved token) at this beat, and it isn't
-		#  ourself, then check it for collisions
-		if other and other != self:
-			if other is Token:
-				var backsolved : Vector3 = other.backsolve(beat) - center
-				# If other is a token, double check that it actually will be
-				#  here during this beat.
-				if (not private or other.faction == faction) and backsolved == point:
-					# If this isn't a friendlies-only check, then add any
-					#  enemies we find to the enemy list.
-					if other.faction != faction and not private:
-						var enemy_visibility : int = 2
-						if not focus: enemy_visibility = 0
-						elif partial: enemy_visibility = 1
-						
-						if point in enemy_tiles.keys():
-							if enemy_tiles[point].visibility < enemy_visibility:
-								enemy_tiles[point].visibility = enemy_visibility
-						else:
-							enemy_tiles[point] = {
-								"token": other, "visibility": enemy_visibility
-							}
-					# Other token-exclusive behavior could go here
+		
+		var max_visibility : Visibility = Visibility.TRANSPARENT
+		
+		var terrain : Terrain = manager.get_terrain_at(point + center)
+		if terrain and terrain.visibility > max_visibility:
+			max_visibility = terrain.visibility
+		
+		var token : Token
+		# Check if any token is projected to be at this location at this beat.
+		#  If this is a private check, assume no movement is performed.
+		for t : Token in manager.get_tokens():
+			if t == self: continue
+			var t_at : Vector3 = t.cubic 
+			if not private or t.faction == faction: t_at = t.backsolve(beat)
+			if point == t_at - center:
+				token = t
+			
+		# If we found a token, then check it for collisions.
+		if token:
+			if token.faction != faction and not private:
+				var enemy_visibility : int = 2
+				if not focus: enemy_visibility = 0
+				elif partial or max_visibility == Visibility.PARTIAL:
+					enemy_visibility = 1
 				
-			# If we're checking for periphery, and it isn't transparent,
-			#  then the line stops here.
-			if not focus:
-				if other.visibility != Visibility.TRANSPARENT: break
-			# Otherwise, account for cell visibility and swap to partial
-			#  vision if required.
-			else:
-				match other.visibility:
-					Cell.Visibility.SOLID: break
-					Cell.Visibility.PARTIAL:
-						if partial and partial_count >= partial_view_depth:
-							break
-						else:
-							partial = true
-							partial_count += 1
+				if point in enemy_tiles.keys():
+					if enemy_tiles[point].visibility < enemy_visibility:
+						enemy_tiles[point].visibility = enemy_visibility
+				else:
+					enemy_tiles[point] = {
+						"token": token, "visibility": enemy_visibility
+					}
+			if token.visibility > max_visibility:
+				max_visibility = token.visibility
+				
+		# If we're checking for periphery, and it isn't transparent,
+		#  then the line stops here.
+		if not focus:
+			if max_visibility != Visibility.TRANSPARENT: break
+		# Otherwise, account for cell visibility and swap to partial
+		#  vision if required.
+		else:
+			match max_visibility:
+				Visibility.SOLID: break
+				Visibility.PARTIAL:
+					if partial and partial_count >= partial_view_depth:
+						break
+					else:
+						partial = true
+						partial_count += 1
+		
 		# If we got this far, we can see this tile somehow. Add it to the
 		#  appropriate list.
 		if not focus: periphery_tiles.append(point)
@@ -605,9 +608,9 @@ func reset() -> void:
 # ______ BUILT-IN ______
 
 func _ready() -> void:
-	super._ready()
-	assert(manager is BeatManager, "Token is not a child of a BeatManager")
-	manager = manager as BeatManager
+	manager = get_parent() as BeatManager
+	manager.add_token(self)
+	
 	_tries_radial = _pregenerate_tries(radial_range)
 	_tries_focus = _pregenerate_tries(focus_range)
 	_tries_extra = _pregenerate_tries(radial_range * 0.5)
